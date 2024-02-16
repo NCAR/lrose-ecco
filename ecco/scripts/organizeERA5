@@ -1,0 +1,94 @@
+#! /bin/csh -f
+
+# Input directory. This is the directory where the downloaded data is.
+set IN_DIR="/scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/tarFiles"
+# Output directory. The files are moved to this directory after they are untared and renamed.
+set OUT_DIR="/scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/levelFiles"
+
+# Process one month at a time. (Not more.)
+set YEAR="2023"
+set MONTH="09"
+
+# Go to input directory
+cd $IN_DIR
+
+# Untar the .tar files
+echo Untar ...
+
+set TAR_FILES=`ls *.tar`
+foreach j ( $TAR_FILES )
+tar -xvf $j
+rm -f $j
+end
+
+# Remove the order number from the beginning of the file names
+echo Removing order number
+
+set NC_FILES=`ls *.nc`
+set FIRST_FILE=$NC_FILES[1]
+set NO_DOTS=($FIRST_FILE:as/./ /)
+set ORDER_NUM=$NO_DOTS[1]
+
+# Temperature files
+rename $ORDER_NUM.T T $ORDER_NUM.T*.nc
+# Geopotential height files
+rename $ORDER_NUM.Z Z $ORDER_NUM.Z*.nc
+# Relative humidity files
+rename $ORDER_NUM.R R $ORDER_NUM.R*.nc
+# Specific humidity files
+rename $ORDER_NUM.Q Q $ORDER_NUM.Q*.nc
+# Divergence files
+rename $ORDER_NUM.D D $ORDER_NUM.D*.nc
+# U files
+rename $ORDER_NUM.U U $ORDER_NUM.U*.nc
+# V files
+rename $ORDER_NUM.V V $ORDER_NUM.V*.nc
+# W files
+rename $ORDER_NUM.W W $ORDER_NUM.W*.nc
+
+# Rename levels from the RDA level ID to hPa
+echo Renaming levels ...
+
+rename .2652. .100hPa. *.2652.*.nc
+rename .2653. .125hPa. *.2653.*.nc
+rename .2654. .150hPa. *.2654.*.nc
+rename .2655. .175hPa. *.2655.*.nc
+rename .2656. .200hPa. *.2656.*.nc
+rename .2657. .225hPa. *.2657.*.nc
+rename .2658. .250hPa. *.2658.*.nc
+rename .2659. .300hPa. *.2659.*.nc
+rename .2660. .350hPa. *.2660.*.nc
+rename .2661. .400hPa. *.2661.*.nc
+rename .2662. .450hPa. *.2662.*.nc
+rename .2663. .500hPa. *.2663.*.nc
+rename .2664. .550hPa. *.2664.*.nc
+rename .2665. .600hPa. *.2665.*.nc
+rename .2666. .650hPa. *.2666.*.nc
+rename .2667. .700hPa. *.2667.*.nc
+rename .2668. .750hPa. *.2668.*.nc
+rename .2669. .775hPa. *.2669.*.nc
+rename .2670. .800hPa. *.2670.*.nc
+rename .2671. .825hPa. *.2671.*.nc
+rename .2672. .850hPa. *.2672.*.nc
+rename .2673. .875hPa. *.2673.*.nc
+rename .2674. .900hPa. *.2674.*.nc
+rename .2675. .925hPa. *.2675.*.nc
+rename .2676. .950hPa. *.2676.*.nc
+rename .2677. .975hPa. *.2677.*.nc
+rename .2678. .1000hPa. *.2678.*.nc
+
+# Move files to output directory in daily subdirectories
+echo Moving files ...
+
+set SUBDIRS=(${YEAR}${MONTH}01 ${YEAR}${MONTH}02 ${YEAR}${MONTH}03 ${YEAR}${MONTH}04 ${YEAR}${MONTH}05 ${YEAR}${MONTH}06 ${YEAR}${MONTH}07 ${YEAR}${MONTH}08 ${YEAR}${MONTH}09 ${YEAR}${MONTH}10 ${YEAR}${MONTH}11 ${YEAR}${MONTH}12 ${YEAR}${MONTH}13 ${YEAR}${MONTH}14 ${YEAR}${MONTH}15 ${YEAR}${MONTH}16 ${YEAR}${MONTH}17 ${YEAR}${MONTH}18 ${YEAR}${MONTH}19 ${YEAR}${MONTH}20 ${YEAR}${MONTH}21 ${YEAR}${MONTH}22 ${YEAR}${MONTH}23 ${YEAR}${MONTH}24 ${YEAR}${MONTH}25 ${YEAR}${MONTH}26 ${YEAR}${MONTH}27 ${YEAR}${MONTH}28 ${YEAR}${MONTH}29 ${YEAR}${MONTH}30 ${YEAR}${MONTH}31)
+
+foreach i ( $SUBDIRS )
+set DATE=$i
+
+mkdir $OUT_DIR/$DATE
+
+mv *.$DATE*.nc $OUT_DIR/$DATE
+end
+
+# Delete empty directories in output directory (e.g. the 31st in months that have only 30 days)
+find $OUT_DIR/ -empty -type d -delete

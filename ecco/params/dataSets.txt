@@ -1,0 +1,37 @@
+ConvStrat data sets
+===================
+
+PECAN input:
+/scr/cirrus1/rsfdata/projects/pecan/mdv/radarCart/mrms_mosaic/
+PECAN output:
+/scr/cirrus1/rsfdata/projects/pecan/mdv/conv_strat/mrms_dual_thresh
+/scr/cirrus1/rsfdata/projects/pecan/mdv/conv_strat/mrms_single_thresh
+
+PECAN GPM HDF5 input:
+/scr/cirrus1/rsfdata/projects/convstrat/raw/gpm/hdf5/2AKu
+PECAN GPM MDV input:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/gpm/pecan/input
+PECAN GPM output:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/gpm/pecan/conv_strat
+
+Sydney input:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/bom/SydneyMerge/mosaic
+Sydney output:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/bom/SydneyMerge/conv_strat
+
+UAE input:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/uae/radarMerge
+UAE output:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/uae/conv_strat
+
+OPERA raw input:
+/scr/cirrus1/rsfdata/projects/convstrat/raw/OPERA
+OPERA MDV input:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/opera/lambert
+OPERA output:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/opera/conv_strat
+
+CONUS input:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/mrmsConus3D/mosaic
+CONUS output:
+/scr/cirrus1/rsfdata/projects/convstrat/mdv/mrmsConus3D/conv_strat

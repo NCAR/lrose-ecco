@@ -1,0 +1,9 @@
+#! /bin/csh
+
+cd ~/git/lrose-test/convstrat/params
+
+Ecco -params Ecco.mrms.conus3D -debug -start "2023 02 01 00 00 00"  -end "2023 02 09 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus/logDir/ecco.202301-02.log &
+
+Ecco -params Ecco.mrms.conus3D -debug -start "2023 02 10 00 00 00"  -end "2023 02 19 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus/logDir/ecco.202301-02.log &
+
+Ecco -params Ecco.mrms.conus3D -debug -start "2023 02 20 00 00 00"  -end "2023 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus/logDir/ecco.202301-02.log &

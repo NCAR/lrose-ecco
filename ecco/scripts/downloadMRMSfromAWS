@@ -1,0 +1,71 @@
+#! /bin/csh -f
+
+# Back up MPD data in mpd_##_data folder
+
+set DATA_DIR="/scr/cirrus2/rsfdata/projects/nexrad-mrms/MergedDbzQC"
+#set DATA_DIR="/scr/cirrus2/rsfdata/projects/nexrad-mrms/AWSdownload"
+
+set YEAR="2023"
+set MONTH="11"
+
+set DIRS=(${YEAR}${MONTH}01 ${YEAR}${MONTH}02 ${YEAR}${MONTH}03 ${YEAR}${MONTH}04 ${YEAR}${MONTH}05 ${YEAR}${MONTH}06 ${YEAR}${MONTH}07 ${YEAR}${MONTH}08 ${YEAR}${MONTH}09 ${YEAR}${MONTH}10 ${YEAR}${MONTH}11 ${YEAR}${MONTH}12 ${YEAR}${MONTH}13 ${YEAR}${MONTH}14 ${YEAR}${MONTH}15 ${YEAR}${MONTH}16 ${YEAR}${MONTH}17 ${YEAR}${MONTH}18 ${YEAR}${MONTH}19 ${YEAR}${MONTH}20 ${YEAR}${MONTH}21 ${YEAR}${MONTH}22 ${YEAR}${MONTH}23 ${YEAR}${MONTH}24 ${YEAR}${MONTH}25 ${YEAR}${MONTH}26 ${YEAR}${MONTH}27 ${YEAR}${MONTH}28 ${YEAR}${MONTH}29 ${YEAR}${MONTH}30)
+
+#set DIRS=(${YEAR}${MONTH}01 ${YEAR}${MONTH}02 ${YEAR}${MONTH}03 ${YEAR}${MONTH}04 ${YEAR}${MONTH}05 ${YEAR}${MONTH}06 ${YEAR}${MONTH}07 ${YEAR}${MONTH}08 ${YEAR}${MONTH}09 ${YEAR}${MONTH}10 ${YEAR}${MONTH}11 ${YEAR}${MONTH}12 ${YEAR}${MONTH}13 ${YEAR}${MONTH}14 ${YEAR}${MONTH}15 ${YEAR}${MONTH}16 ${YEAR}${MONTH}17 ${YEAR}${MONTH}18 ${YEAR}${MONTH}19 ${YEAR}${MONTH}20 ${YEAR}${MONTH}21 ${YEAR}${MONTH}22 ${YEAR}${MONTH}23 ${YEAR}${MONTH}24 ${YEAR}${MONTH}25 ${YEAR}${MONTH}26 ${YEAR}${MONTH}27 ${YEAR}${MONTH}28 ${YEAR}${MONTH}29 ${YEAR}${MONTH}30 ${YEAR}${MONTH}31)
+
+#set DIRS=(${YEAR}${MONTH}19 ${YEAR}${MONTH}20 ${YEAR}${MONTH}21 ${YEAR}${MONTH}22 ${YEAR}${MONTH}23 ${YEAR}${MONTH}24 ${YEAR}${MONTH}25 ${YEAR}${MONTH}26)
+
+cd $DATA_DIR
+
+foreach i ( $DIRS )
+set DATE=$i
+echo $DATE
+
+mkdir $DATE
+cd $DATE
+
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_00.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_00.75/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_01.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_01.25/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_01.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_01.75/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_02.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_02.25/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_02.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_02.75/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_03.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_03.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_04.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_04.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_05.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_05.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_06.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_06.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_07.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_07.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_08.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_08.50/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_09.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_10.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_11.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_12.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_13.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_14.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_15.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_16.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_17.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_18.00/$DATE $DATA_DIR/$DATE --recursive
+/opt/local/bin/aws s3 cp --no-sign-request s3://noaa-mrms-pds/CONUS/MergedReflectivityQC_19.00/$DATE $DATA_DIR/$DATE --recursive
+
+echo Unzipping files ...
+
+set FILES=`ls *_$YEAR$MONTH*.gz`
+foreach j ( $FILES )
+gunzip $j
+end
+
+echo Renaming ...
+rename MRMS_Merged Merged *.grib2
+
+cd $DATA_DIR
+end

@@ -1,0 +1,6 @@
+#! /bin/csh
+
+
+cd $HOME/git/lrose-test/convstrat/params
+
+GpmHdf5ToMdv -params GpmHdf5ToMdv.pecan -debug -f /scr/cirrus1/rsfdata/projects/convstrat/raw/gpm/hdf5/2AKu/*h5
