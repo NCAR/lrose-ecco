@@ -16,7 +16,7 @@ def check_ready(rqst_id, wait_interval=300): # Check every 300s=5min
 # Control dict for subsetting. Describes which data is being downloaded.
 control = { 
     'dataset' : 'ds633.0', # Dataset ID from the RDA website
-    'date':'202309010000/to/202309302359', # Start and end date
+    'date':'202312010000/to/202312312359', # Start and end date
     'datetype':'init',
     # Variables. Geopotential height (Z), U wind (U), V wind (V), vertical wind (W)
     # divergence (D), spec hum (Q), rel hum (R), temperature (T).
@@ -31,12 +31,14 @@ control = {
     'elon':-60, # East longitude
     'wlon':-130, # West longitude
     'product':'Analysis',
-    'group_index':26 # 26 is the index for the pressure level reanalysis.
+    'groupindex':26 # 26 is the index for the pressure level reanalysis.
 }
 
 # Submit a request and check if it went through without an error.
 response = rc.submit_json(control)
-assert response['status'] == 'ok'
+print(response)
+
+assert response['http_response'] == 200
 rqst_id = response['data']['request_id']
 
 print(response)

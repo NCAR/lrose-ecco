@@ -97,17 +97,17 @@ field_list = {
 
 # MRMS mosaic
 
-DBZ_2D     DBZ_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&DbzComp dbz.colors      dBZ -5 80 5 cart,comp 1 0
-DBZ_3D     DBZ_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&Dbz3D dbz.colors      dBZ -5 80 5 cart 1 0
+DBZ_2D     DBZ_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&DbzComp dbz.colors      dBZ -5 80 5 cart,comp 1 0
+DBZ_3D     DBZ_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&Dbz3D dbz.colors      dBZ -5 80 5 cart 1 0
 
-Convectivity_2D  Convectivity_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&ConvectivityComp convectivity.colors - -5 80 5 cart,comp 1 0
-Convectivity_3D  Convectivity_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&Convectivity3D convectivity.colors - -5 80 5 cart 1 0
+Convectivity_2D  Convectivity_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&ConvectivityComp convectivity.colors - -5 80 5 cart,comp 1 0
+Convectivity_3D  Convectivity_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&Convectivity3D convectivity.colors - -5 80 5 cart 1 0
 
-EchoType_2D  EchoType_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&EchoTypeComp conv_strat4.colors - -5 80 5 cart,comp 1 0
-EchoType_3D  EchoType_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&EchoType3D conv_strat4.colors - -5 80 5 cart 1 0
+EchoType_2D  EchoType_2D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&EchoTypeComp conv_strat4.colors - -5 80 5 cart,comp 1 0
+EchoType_3D  EchoType_3D  mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&EchoType3D conv_strat4.colors - -5 80 5 cart 1 0
 
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-Temp_3D      Temp_3D      mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus&TEMP       temp.colors C -5 80 5 cart 1 0
+Temp_3D      Temp_3D      mdvp:://localhost:0:/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain&TEMP       temp.colors C -5 80 5 cart 1 0
 
 
 </GRIDS>

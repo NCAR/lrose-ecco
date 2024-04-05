@@ -7,7 +7,7 @@ set OUT_DIR="/scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/levelFiles"
 
 # Process one month at a time. (Not more.)
 set YEAR="2023"
-set MONTH="09"
+set MONTH="12"
 
 # Go to input directory
 cd $IN_DIR
