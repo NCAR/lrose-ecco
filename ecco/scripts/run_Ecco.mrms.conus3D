@@ -2,51 +2,53 @@
 
 cd ~/git/lrose-ecco/ecco/params
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2020 12 01 00 00 00"  -end "2020 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202012.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2020 11 26 00 00 00"  -end "2020 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202011_2.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 01 01 00 00 00"  -end "2021 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202101.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2020 12 27 00 00 00"  -end "2020 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202012_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 02 01 00 00 00"  -end "2021 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202102.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 01 25 00 00 00"  -end "2021 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202101_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 03 01 00 00 00"  -end "2021 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202103.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 02 26 00 00 00"  -end "2021 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202102_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 04 01 00 00 00"  -end "2021 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202104.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 03 25 00 00 00"  -end "2021 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202103_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 05 01 00 00 00"  -end "2021 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202105.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 04 24 00 00 00"  -end "2021 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202104_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 06 01 00 00 00"  -end "2021 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202106.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 05 26 00 00 00"  -end "2021 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202105_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 07 01 00 00 00"  -end "2021 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202107.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 06 24 00 00 00"  -end "2021 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202106_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 08 01 00 00 00"  -end "2021 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202108.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 07 24 00 00 00"  -end "2021 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202107_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 09 01 00 00 00"  -end "2021 09 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202109.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 08 25 00 00 00"  -end "2021 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202108_3.log &
+
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 09 27 00 00 00"  -end "2021 09 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202109_3.log &
 
 Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 10 01 00 00 00"  -end "2021 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202110.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 11 01 00 00 00"  -end "2021 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202111.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 11 25 00 00 00"  -end "2021 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202111_3.log &
 
 Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2021 12 01 00 00 00"  -end "2021 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202112.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 01 01 00 00 00"  -end "2022 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202201.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 01 25 00 00 00"  -end "2022 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202201_3.log &
 
 Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 02 01 00 00 00"  -end "2022 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202202.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 03 01 00 00 00"  -end "2022 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202203.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 03 25 00 00 00"  -end "2022 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202203_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 04 01 00 00 00"  -end "2022 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202204.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 04 27 00 00 00"  -end "2022 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202204_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 05 01 00 00 00"  -end "2022 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202205.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 05 30 00 00 00"  -end "2022 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202205_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 06 01 00 00 00"  -end "2022 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202206.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 06 29 00 00 00"  -end "2022 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202206_2.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 07 01 00 00 00"  -end "2022 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202207.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 07 25 00 00 00"  -end "2022 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202207_3.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 08 01 00 00 00"  -end "2022 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202208.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 08 24 00 00 00"  -end "2022 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202208_3.log &
 
 Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 09 01 00 00 00"  -end "2022 09 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202209.log &
 
-Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 10 01 00 00 00"  -end "2022 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202210.log &
+#Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 10 25 00 00 00"  -end "2022 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202210_3.log &
 
 Ecco -params Ecco.mrms.conus3D.terrain -debug -start "2022 11 01 00 00 00"  -end "2022 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/logDir/ecco.202211.log &
 

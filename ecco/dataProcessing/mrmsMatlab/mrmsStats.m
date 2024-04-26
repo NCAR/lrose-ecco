@@ -5,7 +5,7 @@ close all;
 
 addpath(genpath('~/git/lrose-test/convstrat/dataProcessing/'));
 
-startTime=datetime(2022,5,1,0,0,0);
+startTime=datetime(2022,5,2,0,0,0);
 endTime=datetime(2022,6,1,0,0,0);
 
 saveData=1;

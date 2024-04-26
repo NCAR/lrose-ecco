@@ -44,11 +44,11 @@ def main():
                       help='Start time for processing')
     parser.add_option('--end',
                       dest='endTime',
-                      default='2022 05 02 00 30 00',
+                      default='2022 05 02 06 00 00',
                       help='End time for processing')
     parser.add_option('--inDir',
                       dest='inDir',
-                      default='/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus/',
+                      default='/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain/',
                       help='Directory for output data')
     parser.add_option('--outDir',
                       dest='outDir',
@@ -78,9 +78,15 @@ def main():
     lon=readThis.variables['x0'][:]
     lat=readThis.variables['y0'][:]
     
-    initArray=np.zeros((len(lat),len(lon),24))
-    echoType2D=dict(StratLow=initArray, StratMid=initArray, StratHigh=initArray, Mixed=initArray,
-                    ConvElev=initArray, ConvShallow=initArray, ConvMid=initArray, ConvDeep=initArray)
+    initArray=np.zeros((24,len(lat),len(lon)))
+    StratLow=initArray
+    StratMid=initArray
+    StratHigh=initArray
+    Mixed=initArray
+    ConvElev=initArray
+    ConvShallow=initArray
+    ConvMid=initArray
+    ConvDeep=initArray
     
     countAll=np.full((len(lat),len(lon)),0)
             
@@ -105,20 +111,32 @@ def main():
         echoType2Din=echoType2Din.filled(fill_value=np.nan)
         
         for ii in range(0,23):
-            echoType2D['StratLow'][:,:,ii][(echoType2Din==14) & (mstHours2D==ii)]=echoType2D['StratLow'][:,:,ii][(echoType2Din==14) & (mstHours2D==ii)]+1
-            echoType2D['StratMid'][:,:,ii][(echoType2Din==16) & (mstHours2D==ii)]=echoType2D['StratMid'][:,:,ii][(echoType2Din==16) & (mstHours2D==ii)]+1
-            echoType2D['StratHigh'][:,:,ii][(echoType2Din==18) & (mstHours2D==ii)]=echoType2D['StratHigh'][:,:,ii][(echoType2Din==18) & (mstHours2D==ii)]+1
-            echoType2D['Mixed'][:,:,ii][(echoType2Din==25) & (mstHours2D==ii)]=echoType2D['Mixed'][:,:,ii][(echoType2Din==25) & (mstHours2D==ii)]+1
-            echoType2D['ConvElev'][:,:,ii][(echoType2Din==32) & (mstHours2D==ii)]=echoType2D['ConvElev'][:,:,ii][(echoType2Din==32) & (mstHours2D==ii)]+1
-            echoType2D['ConvShallow'][:,:,ii][(echoType2Din==34) & (mstHours2D==ii)]=echoType2D['ConvShallow'][:,:,ii][(echoType2Din==34) & (mstHours2D==ii)]+1
-            echoType2D['ConvMid'][:,:,ii][(echoType2Din==36) & (mstHours2D==ii)]=echoType2D['ConvMid'][:,:,ii][(echoType2Din==36) & (mstHours2D==ii)]+1
-            echoType2D['ConvDeep'][:,:,ii][(echoType2Din==38) & (mstHours2D==ii)]=echoType2D['ConvDeep'][:,:,ii][(echoType2Din==38) & (mstHours2D==ii)]+1
+            #print(ii)
+            StratLow[ii,:,:]=StratLow[ii,:,:]+((echoType2Din==14) & (mstHours2D==ii)).astype(int)
+            StratMid[ii,:,:]=StratMid[ii,:,:]+((echoType2Din==16) & (mstHours2D==ii)).astype(int)
+            StratHigh[ii,:,:]=StratHigh[ii,:,:]+((echoType2Din==18) & (mstHours2D==ii)).astype(int)
+            Mixed[ii,:,:]=Mixed[ii,:,:]+((echoType2Din==25) & (mstHours2D==ii)).astype(int)
+            ConvElev[ii,:,:]=ConvElev[ii,:,:]+((echoType2Din==32) & (mstHours2D==ii)).astype(int)
+            ConvShallow[ii,:,:]=ConvShallow[ii,:,:]+((echoType2Din==34) & (mstHours2D==ii)).astype(int)
+            ConvMid[ii,:,:]=ConvMid[ii,:,:]+((echoType2Din==36) & (mstHours2D==ii)).astype(int)
+            ConvDeep[ii,:,:]=ConvDeep[ii,:,:]+((echoType2Din==38) & (mstHours2D==ii)).astype(int)
             
             countAll[(mstHours2D==ii)]=countAll[(mstHours2D==ii)]+1;
     
-    echoType2D["countAll"]=countAll
-    echoType2D["lon"]=lon
-    echoType2D["lat"]=lat
+    echoType2D={
+        "countAll":countAll,
+        "lon":lon,
+        "lat":lat,
+        "StratLow":StratLow,
+        "StratMid":StratMid,
+        "StratHigh":StratHigh,
+        "Mixed":Mixed,
+        "ConvElev":ConvElev,
+        "ConvShallow":ConvShallow,
+        "ConvMid":ConvMid,
+        "ConvDeep":ConvDeep
+    }
+    
     outfile=options.outDir+'mrmsStats_'+startTime.strftime("%Y%m%d")+'_to_'+endTime.strftime("%Y%m%d")+'.pickle'
     with open(outfile, 'wb') as handle:
         pickle.dump(echoType2D, handle, protocol=pickle.HIGHEST_PROTOCOL)
