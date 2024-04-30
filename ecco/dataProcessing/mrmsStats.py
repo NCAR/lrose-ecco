@@ -40,11 +40,11 @@ def main():
     parser = OptionParser(usage)
     parser.add_option('--start',
                       dest='startTime',
-                      default='2022 05 02 00 00 00',
+                      default='2022 05 01 00 00 00',
                       help='Start time for processing')
     parser.add_option('--end',
                       dest='endTime',
-                      default='2022 05 02 06 00 00',
+                      default='2022 06 01 00 00 00',
                       help='End time for processing')
     parser.add_option('--inDir',
                       dest='inDir',
