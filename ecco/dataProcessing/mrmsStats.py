@@ -40,11 +40,11 @@ def main():
     parser = OptionParser(usage)
     parser.add_option('--start',
                       dest='startTime',
-                      default='2022 05 01 00 00 00',
+                      default='2022 05 01 06 00 00',
                       help='Start time for processing')
     parser.add_option('--end',
                       dest='endTime',
-                      default='2022 06 01 00 00 00',
+                      default='2022 05 01 12 00 00',
                       help='End time for processing')
     parser.add_option('--inDir',
                       dest='inDir',
@@ -78,17 +78,18 @@ def main():
     lon=readThis.variables['x0'][:]
     lat=readThis.variables['y0'][:]
     
-    initArray=np.zeros((24,len(lat),len(lon)))
-    StratLow=initArray
-    StratMid=initArray
-    StratHigh=initArray
-    Mixed=initArray
-    ConvElev=initArray
-    ConvShallow=initArray
-    ConvMid=initArray
-    ConvDeep=initArray
+    #initArray=np.zeros((24,len(lat),len(lon)))
+    StratLow=np.zeros((24,len(lat),len(lon)))
+    StratMid=np.zeros((24,len(lat),len(lon)))
+    StratHigh=np.zeros((24,len(lat),len(lon)))
+    Mixed=np.zeros((24,len(lat),len(lon)))
+    ConvElev=np.zeros((24,len(lat),len(lon)))
+    ConvShallow=np.zeros((24,len(lat),len(lon)))
+    ConvMid=np.zeros((24,len(lat),len(lon)))
+    ConvDeep=np.zeros((24,len(lat),len(lon)))
     
-    countAll=np.full((len(lat),len(lon)),0)
+    CountAllHours=np.zeros((24,len(lat),len(lon)))
+    CountAllEcho=np.zeros((24,len(lat),len(lon)))
             
     for readFile in fileList:
         print(readFile)
@@ -121,10 +122,12 @@ def main():
             ConvMid[ii,:,:]=ConvMid[ii,:,:]+((echoType2Din==36) & (mstHours2D==ii)).astype(int)
             ConvDeep[ii,:,:]=ConvDeep[ii,:,:]+((echoType2Din==38) & (mstHours2D==ii)).astype(int)
             
-            countAll[(mstHours2D==ii)]=countAll[(mstHours2D==ii)]+1;
+            CountAllEcho[ii,:,:]=CountAllEcho[ii,:,:]+((~np.isnan(echoType2Din)) & (mstHours2D==ii)).astype(int)
+            CountAllHours[ii,:,:]=CountAllHours[ii,:,:]+(mstHours2D==ii).astype(int)
     
     echoType2D={
-        "countAll":countAll,
+        "CountAllHours":CountAllHours,
+        "CountAllEcho":CountAllEcho,
         "lon":lon,
         "lat":lat,
         "StratLow":StratLow,
