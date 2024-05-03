@@ -111,7 +111,7 @@ def main():
         echoType2Din=np.squeeze(readThis.variables['EchoTypeComp'][:])
         echoType2Din=echoType2Din.filled(fill_value=np.nan)
         
-        for ii in range(0,23):
+        for ii in range(24):
             #print(ii)
             StratLow[ii,:,:]=StratLow[ii,:,:]+((echoType2Din==14) & (mstHours2D==ii)).astype(int)
             StratMid[ii,:,:]=StratMid[ii,:,:]+((echoType2Din==16) & (mstHours2D==ii)).astype(int)
