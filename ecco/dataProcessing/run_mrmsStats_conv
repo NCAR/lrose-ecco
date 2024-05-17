@@ -1,0 +1,43 @@
+#! /bin/csh -f
+
+# Run mrmsStats
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2020 11 01 00 00 00" --end "2020 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202011.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2020 12 01 00 00 00" --end "2020 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202012.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 01 01 00 00 00" --end "2021 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202101.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 02 01 00 00 00" --end "2021 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202102.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 03 01 00 00 00" --end "2021 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202103.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 04 01 00 00 00" --end "2021 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202104.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 05 01 00 00 00" --end "2021 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202105.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 06 01 00 00 00" --end "2021 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202106.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 07 01 00 00 00" --end "2021 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202107.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 08 01 00 00 00" --end "2021 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202108.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 09 01 00 00 00" --end "2021 09 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202109.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 10 01 00 00 00" --end "2021 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202110.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 11 01 00 00 00" --end "2021 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202111.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2021 12 01 00 00 00" --end "2021 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202112.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 01 01 00 00 00" --end "2022 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202201.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 02 01 00 00 00" --end "2022 02 28 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202202.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 03 01 00 00 00" --end "2022 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202203.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 04 01 00 00 00" --end "2022 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202204.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 05 01 00 00 00" --end "2022 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202205.log &
+
+python ~/git/lrose-ecco/ecco/dataProcessing/mrmsStats_conv.py --start "2022 06 01 00 00 00" --end "2022 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/logFiles/pyStats_conv_202206.log &
