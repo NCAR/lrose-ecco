@@ -29,7 +29,7 @@ def main():
 
     plt.close('all')
     
-    indir='/scr/cirrus2/rsfdata/projects/nexrad-mrms/statMats/'
+    indir='/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/'
     infile='mrmsStats_20220501_to_20220501.pickle'
     
     figdir='/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/'
