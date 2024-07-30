@@ -8,26 +8,17 @@ addpath(genpath('~/git/lrose-test/convstrat/dataProcessing/mrmsMatlab/'));
 showPlot=1;
 
 indir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/'];
-figdir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/allMonths/'];
+figdir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/MAM/'];
 
-inList={'20210101/20210101_000038.mdv.cf.nc';
-    '20210201/20210201_000038.mdv.cf.nc';
-    '20210301/20210301_000038.mdv.cf.nc';
+inList={'20210301/20210301_000038.mdv.cf.nc';
     '20210401/20210401_000039.mdv.cf.nc';
-    '20210501/20210501_000038.mdv.cf.nc';
-    '20210601/20210601_000014.mdv.cf.nc';
-    '20210701/20210701_000041.mdv.cf.nc';
-    '20210801/20210801_000040.mdv.cf.nc';
-    '20210901/20210901_000039.mdv.cf.nc';
-    '20211001/20211001_000043.mdv.cf.nc';
-    '20211101/20211101_000036.mdv.cf.nc';
-    '20211201/20211201_000034.mdv.cf.nc'};
+    '20210501/20210501_000038.mdv.cf.nc'};
 
 cats={'StratLow','StratMid','StratHigh','Mixed','ConvShallow','ConvMid','ConvDeep','ConvElev'};
 
 loadVars={'Count'};
 
-maskFile=[figdir(1:end-10),'masks/allMonths_mask1000000.mat']; % Set to empty for no masking
+maskFile=[figdir(1:end-4),'masks/allMonths_mask1000000.mat']; % Set to empty for no masking
 data=loadMRMSmonths(indir,inList,cats,loadVars,maskFile);
 
 
@@ -89,7 +80,7 @@ for ii=1:length(cats)
 end
 
 set(gcf,'PaperPositionMode','auto')
-print(f1,[figdir,'categories_percentOfTotalCounts_allMonths.png'],'-dpng','-r0');
+print(f1,[figdir,'categories_percentOfTotalCounts_MAM.png'],'-dpng','-r0');
 
 %% Category percent of valid counts
 close all
@@ -131,7 +122,7 @@ for ii=1:length(cats)
 end
 
 set(gcf,'PaperPositionMode','auto')
-print(f1,[figdir,'categories_percentOfValidCounts_allMonths.png'],'-dpng','-r0');
+print(f1,[figdir,'categories_percentOfValidCounts_MAM.png'],'-dpng','-r0');
 
 %% Per hour 0 to 12
 for ii=1:length(cats)
@@ -180,7 +171,7 @@ for ii=1:length(cats)
     end
 
     set(gcf,'PaperPositionMode','auto')
-    print(f1,[figdir,cats{ii},'_percentOfValidCounts_00-12ST_allMonths.png'],'-dpng','-r0');
+    print(f1,[figdir,cats{ii},'_percentOfValidCounts_00-12ST_MAM.png'],'-dpng','-r0');
 
 end
 % Per hour 12 to 00
@@ -230,7 +221,7 @@ for ii=1:length(cats)
     end
 
     set(gcf,'PaperPositionMode','auto')
-    print(f1,[figdir,cats{ii},'_percentOfValidCounts_12-00ST_allMonths.png'],'-dpng','-r0');
+    print(f1,[figdir,cats{ii},'_percentOfValidCounts_12-00ST_MAM.png'],'-dpng','-r0');
 
 end
 
@@ -281,6 +272,6 @@ for ii=1:length(cats)
     end
 
     set(gcf,'PaperPositionMode','auto')
-    print(f1,[figdir,cats{ii},'_percentOfValidCounts_fourDaily_allMonths.png'],'-dpng','-r0');
+    print(f1,[figdir,cats{ii},'_percentOfValidCounts_fourDaily_MAM.png'],'-dpng','-r0');
 
 end

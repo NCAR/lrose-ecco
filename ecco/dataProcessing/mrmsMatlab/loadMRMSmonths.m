@@ -1,4 +1,4 @@
-function data=loadMRMSmonths(indir,inList,cats,loadVars)
+function data=loadMRMSmonths(indir,inList,cats,loadVars,maskFile)
 
 infile1=[indir,inList{1}];
 data.lon=ncread(infile1,'x0');
@@ -24,5 +24,19 @@ for ii=1:length(inList)
             data.(cats{jj}).(loadVars{kk})=data.(cats{jj}).(loadVars{kk})+ncread(infile,[cats{jj},loadVars{kk}]);
         end
     end
+end
 
+% Mask
+if ~isempty(maskFile)
+    load(maskFile);
+    mask3D=repmat(mask,1,1,24);
+
+    % Loop through categories
+    for jj=1:length(cats)
+        % Loop through variables
+        for kk=1:length(loadVars)
+            data.(cats{jj}).(loadVars{kk})(mask3D==1)=nan;
+        end
+    end
+end
 end
