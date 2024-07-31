@@ -5,7 +5,7 @@ close all;
 
 addpath(genpath('~/git/lrose-test/convstrat/dataProcessing/mrmsMatlab/'));
 
-showPlot=1;
+showPlot=0;
 
 indir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/'];
 figdir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/DJF/'];
@@ -18,7 +18,7 @@ cats={'StratLow','StratMid','StratHigh','Mixed','ConvShallow','ConvMid','ConvDee
 
 loadVars={'Count'};
 
-maskFile=[figdir(1:end-4),'masks/allMonths_mask1000000.mat']; % Set to empty for no masking
+maskFile='/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/masks/coverageMasks/coverage_mask20.mat'; % Set to empty for no masking
 data=loadMRMSmonths(indir,inList,cats,loadVars,maskFile);
 
 
@@ -39,6 +39,108 @@ countries = shaperead('landareas',...
 
 countVal=sum(data.ValidCount,3);
 countTot=sum(data.TotalCount,3);
+
+%% Stratiform mixed, and convective
+
+stratTot=data.StratLow.Count+data.StratMid.Count+data.StratHigh.Count;
+convTot=data.ConvShallow.Count+data.ConvMid.Count+data.ConvDeep.Count;
+
+close all
+
+f1 = figure('Position',[200 500 500 1000],'DefaultAxesFontSize',12,'visible',showPlot);
+t = tiledlayout(3,1,'TileSpacing','tight','Padding','tight');
+
+colormap('jet');
+
+ax=nexttile(1);
+
+catTot=sum(stratTot,3);
+catPerc=catTot./countVal*100;
+catPerc(catPerc==0)=nan;
+
+perc=prctile(catPerc(:),99);
+clims=[0,perc];
+
+h=imagesc(data.lon,data.lat,catPerc');
+set(h, 'AlphaData', ~isnan(h.CData));
+set(gca,'YDir','normal');
+xlim(xlims);
+ylim(ylims);
+clim(clims);
+cb1=colorbar;
+cb1.Title.String='%';
+
+hold on
+geoshow(states,'FaceColor',[1,1,1],'facealpha',0,'DefaultEdgeColor',[0.8,0.8,0.8]);
+geoshow(countries,'FaceColor',[1,1,1],'facealpha',0);
+
+title('Stratiform');
+
+box on
+xlabel('Longitude (deg)');
+ylabel('Latitude (deg)');
+ax.SortMethod = 'childorder';
+
+ax=nexttile(2);
+
+catTot=sum(data.Mixed.Count,3);
+catPerc=catTot./countVal*100;
+catPerc(catPerc==0)=nan;
+
+perc=prctile(catPerc(:),99);
+clims=[0,perc];
+
+h=imagesc(data.lon,data.lat,catPerc');
+set(h, 'AlphaData', ~isnan(h.CData));
+set(gca,'YDir','normal');
+xlim(xlims);
+ylim(ylims);
+clim(clims);
+cb1=colorbar;
+cb1.Title.String='%';
+
+hold on
+geoshow(states,'FaceColor',[1,1,1],'facealpha',0,'DefaultEdgeColor',[0.8,0.8,0.8]);
+geoshow(countries,'FaceColor',[1,1,1],'facealpha',0);
+
+title('Mixed');
+
+box on
+xlabel('Longitude (deg)');
+ylabel('Latitude (deg)');
+ax.SortMethod = 'childorder';
+
+ax=nexttile(3);
+
+catTot=sum(convTot,3);
+catPerc=catTot./countVal*100;
+catPerc(catPerc==0)=nan;
+
+perc=prctile(catPerc(:),99);
+clims=[0,perc];
+
+h=imagesc(data.lon,data.lat,catPerc');
+set(h, 'AlphaData', ~isnan(h.CData));
+set(gca,'YDir','normal');
+xlim(xlims);
+ylim(ylims);
+clim(clims);
+cb1=colorbar;
+cb1.Title.String='%';
+
+hold on
+geoshow(states,'FaceColor',[1,1,1],'facealpha',0,'DefaultEdgeColor',[0.8,0.8,0.8]);
+geoshow(countries,'FaceColor',[1,1,1],'facealpha',0);
+
+title('Convective');
+
+box on
+xlabel('Longitude (deg)');
+ylabel('Latitude (deg)');
+ax.SortMethod = 'childorder';
+
+set(gcf,'PaperPositionMode','auto')
+print(f1,[figdir,'stratMixedConv_percentOfValidCounts_DJF.png'],'-dpng','-r0');
 
 %% Category percent of total counts
 close all
