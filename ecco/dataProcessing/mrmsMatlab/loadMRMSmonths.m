@@ -11,8 +11,12 @@ for ii=1:length(inList)
         data.ValidCount=zeros(length(data.lon),length(data.lat),24);
         data.TotalCount=zeros(length(data.lon),length(data.lat),24);
     end
-    data.ValidCount=data.ValidCount+ncread(infile,'ValidCount');
-    data.TotalCount=data.TotalCount+ncread(infile,'TotalCount');
+    inCounts=ncread(infile,'ValidCountHourly');
+    inCounts(isnan(inCounts))=0;
+    data.ValidCount=data.ValidCount+inCounts;
+    inCounts=ncread(infile,'TotalCountHourly');
+    inCounts(isnan(inCounts))=0;
+    data.TotalCount=data.TotalCount+inCounts;
 
     % Loop through categories
     for jj=1:length(cats)
@@ -21,7 +25,9 @@ for ii=1:length(inList)
             if ii==1
                 data.(cats{jj}).(loadVars{kk})=zeros(length(data.lon),length(data.lat),24);
             end
-            data.(cats{jj}).(loadVars{kk})=data.(cats{jj}).(loadVars{kk})+ncread(infile,[cats{jj},loadVars{kk}]);
+            inCounts=ncread(infile,[cats{jj},loadVars{kk}]);
+            inCounts(isnan(inCounts))=0;
+            data.(cats{jj}).(loadVars{kk})=data.(cats{jj}).(loadVars{kk})+inCounts;
         end
     end
 end
