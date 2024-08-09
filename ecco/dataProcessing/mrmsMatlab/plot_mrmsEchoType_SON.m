@@ -7,7 +7,7 @@ addpath(genpath('~/git/lrose-test/convstrat/dataProcessing/mrmsMatlab/'));
 
 showPlot=0;
 
-indir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/'];
+indir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/cov80/'];
 figdir=['/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/SON/'];
 
 inList={'20210901/20210901_000039.mdv.cf.nc';
@@ -16,11 +16,12 @@ inList={'20210901/20210901_000039.mdv.cf.nc';
 
 cats={'StratLow','StratMid','StratHigh','Mixed','ConvShallow','ConvMid','ConvDeep','ConvElev'};
 
-loadVars={'Count'};
+loadVars={'CountHourly'};
 
-maskFile='/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/masks/coverageMasks/coverage_mask20.mat'; % Set to empty for no masking
+%maskFile='/scr/cirrus2/rsfdata/projects/nexrad-mrms/figures/eccoStats/masks/coverageMasks/coverage_mask20.mat'; % Set to empty for no masking
+maskFile=[];
+
 data=loadMRMSmonths(indir,inList,cats,loadVars,maskFile);
-
 
 %% Plot
 
@@ -42,12 +43,12 @@ countTot=sum(data.TotalCount,3);
 
 %% Stratiform mixed, and convective
 
-stratTot=data.StratLow.Count+data.StratMid.Count+data.StratHigh.Count;
-convTot=data.ConvShallow.Count+data.ConvMid.Count+data.ConvDeep.Count;
+stratTot=data.StratLow.CountHourly+data.StratMid.CountHourly+data.StratHigh.CountHourly;
+convTot=data.ConvShallow.CountHourly+data.ConvMid.CountHourly+data.ConvDeep.CountHourly;
 
 close all
 
-f1 = figure('Position',[200 500 500 1000],'DefaultAxesFontSize',12,'visible',showPlot);
+f1 = figure('Position',[200 500 500 1000],'DefaultAxesFontSize',12,'visible','on');
 t = tiledlayout(3,1,'TileSpacing','tight','Padding','tight');
 
 colormap('jet');
@@ -83,7 +84,7 @@ ax.SortMethod = 'childorder';
 
 ax=nexttile(2);
 
-catTot=sum(data.Mixed.Count,3);
+catTot=sum(data.Mixed.CountHourly,3);
 catPerc=catTot./countVal*100;
 catPerc(catPerc==0)=nan;
 
@@ -142,6 +143,7 @@ ax.SortMethod = 'childorder';
 set(gcf,'PaperPositionMode','auto')
 print(f1,[figdir,'stratMixedConv_percentOfValidCounts_SON.png'],'-dpng','-r0');
 
+
 %% Category percent of total counts
 close all
 
@@ -151,7 +153,7 @@ t = tiledlayout(4,2,'TileSpacing','tight','Padding','tight');
 colormap('jet');
 
 for ii=1:length(cats)
-    catTot=sum(data.(cats{ii}).Count,3);
+    catTot=sum(data.(cats{ii}).CountHourly,3);
     catPerc=catTot./countTot*100;
     catPerc(catPerc==0)=nan;
 
@@ -165,9 +167,11 @@ for ii=1:length(cats)
     set(gca,'YDir','normal');
     xlim(xlims);
     ylim(ylims);
-    clim(clims);
-    cb1=colorbar;
-    cb1.Title.String='%';
+    if ~all(isnan(catPerc(:)))
+        clim(clims);
+        cb1=colorbar;
+        cb1.Title.String='%';
+    end
 
     hold on
     geoshow(states,'FaceColor',[1,1,1],'facealpha',0,'DefaultEdgeColor',[0.8,0.8,0.8]);
@@ -193,7 +197,7 @@ t = tiledlayout(4,2,'TileSpacing','tight','Padding','tight');
 colormap('jet');
 
 for ii=1:length(cats)
-    catTot=sum(data.(cats{ii}).Count,3);
+    catTot=sum(data.(cats{ii}).CountHourly,3);
     catPerc=catTot./countVal*100;
     catPerc(catPerc==0)=nan;
 
@@ -207,9 +211,11 @@ for ii=1:length(cats)
     set(gca,'YDir','normal');
     xlim(xlims);
     ylim(ylims);
-    clim(clims);
-    cb1=colorbar;
-    cb1.Title.String='%';
+    if ~all(isnan(catPerc(:)))
+        clim(clims);
+        cb1=colorbar;
+        cb1.Title.String='%';
+    end
 
     hold on
     geoshow(states,'FaceColor',[1,1,1],'facealpha',0,'DefaultEdgeColor',[0.8,0.8,0.8]);
@@ -228,7 +234,7 @@ print(f1,[figdir,'categories_percentOfValidCounts_SON.png'],'-dpng','-r0');
 
 %% Per hour 0 to 12
 for ii=1:length(cats)
-    catMat=data.(cats{ii}).Count;
+    catMat=data.(cats{ii}).CountHourly;
     catPercAll=double(catMat)./countVal*100;
     catPercAll(catPercAll==0)=nan;
 
@@ -247,7 +253,9 @@ for ii=1:length(cats)
         ax=nexttile(jj);
 
         catPerc=catPercAll(:,:,jj);
+        
         if ~isnan(perc)
+           
             h=imagesc(data.lon,data.lat,catPerc');
             set(h, 'AlphaData', ~isnan(h.CData));
             set(gca,'YDir','normal');
@@ -276,7 +284,7 @@ for ii=1:length(cats)
 end
 % Per hour 12 to 00
 for ii=1:length(cats)
-    catMat=data.(cats{ii}).Count;
+    catMat=data.(cats{ii}).CountHourly;
     catPercAll=double(catMat)./countVal*100;
     catPercAll(catPercAll==0)=nan;
 
@@ -297,6 +305,7 @@ for ii=1:length(cats)
         catPerc=catPercAll(:,:,jj);
         
         if ~isnan(perc)
+           
             h=imagesc(data.lon,data.lat,catPerc');
             set(h, 'AlphaData', ~isnan(h.CData));
             set(gca,'YDir','normal');
@@ -326,7 +335,7 @@ end
 
 %% Four times daily
 for ii=1:length(cats)
-    catMat=data.(cats{ii}).Count;
+    catMat=data.(cats{ii}).CountHourly;
     catPercAll=double(catMat)./countVal*100;
     catPercAll(catPercAll==0)=nan;
 
