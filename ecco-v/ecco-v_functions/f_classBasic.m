@@ -1,4 +1,4 @@
-function classBasic=f_classBasic(conv,stratMixed,mixedConv,melt)
+function classBasic=f_classBasic(conv,stratMixed,mixedConv,melt,enlargeMixed,enlargeConv)
 % Find basic classification and merge suitable data
 classBasic=nan(size(conv));
 
@@ -74,11 +74,11 @@ for ii=1:mixedAreas.NumObjects
 end
 
 % Set up check
-horLarge=imdilate(maskMixed, strel('line', 50,0));
+horLarge=imdilate(maskMixed, strel('line', 100,0));
 
 % Enlarge mixedConv
-mixedLarge1=imdilate(maskMixed, strel('disk', 3));
-mixedLarge=imclose(mixedLarge1,strel('disk', 9));
+mixedLarge1=imdilate(maskMixed, strel('disk', enlargeMixed));
+mixedLarge=imclose(mixedLarge1,strel('disk', enlargeMixed*3));
 mixedLarge(isnan(conv))=0;
 mixedLarge=imfill(mixedLarge,'holes');
 mixedLarge=imerode(mixedLarge,strel('disk', 3));
@@ -106,11 +106,11 @@ mixedLarge=imdilate(mixedLarge,strel('disk', 3));
 maskConv=conv>=mixedConv;
 
 % Set up check
-horLarge2=imdilate(maskConv, strel('line', 50,0));
+horLarge2=imdilate(maskConv, strel('line', 100,0));
 
 % Enlarge conv
-convLarge1=imdilate(maskConv, strel('disk', 3));
-convLarge=imclose(convLarge1,strel('disk', 5));
+convLarge1=imdilate(maskConv, strel('disk', enlargeConv));
+convLarge=imclose(convLarge1,strel('disk', enlargeConv*5));
 convLarge(isnan(conv))=0;
 convLarge=imfill(convLarge,'holes');
 convLarge=imerode(convLarge,strel('disk', 3));

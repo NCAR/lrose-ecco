@@ -1,4 +1,4 @@
-function [fileList] = makeFileList(indir,startTime,endTime,fileFormat,subdir)
+function [fileList] = makeFileList_spol(indir,startTime,endTime,fileFormat,subdir)
 %Make list with files within time range based on the start time of the
 %files
 % indir: directory where the files are located (see also subdir)

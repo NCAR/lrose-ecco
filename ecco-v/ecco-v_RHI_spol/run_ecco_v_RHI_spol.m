@@ -1,10 +1,13 @@
 
-% ECCO-V for NASA APR3 radar data.
+% ECCO-V for S-Pol RHI radar data.
 % Author: Ulrike Romatschke, NCAR-EOL
 % See https://doi.org/10.1175/JTECH-D-22-0019.1 for algorithm description
 
 clear all; % Clear workspace
 close all; % Close all figures
+
+% Add path to functions
+addpath(genpath('../ecco-v_functions/'));
 
 %% Input variables
 
@@ -19,27 +22,34 @@ figdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/plot
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='off';
+showPlot='on';
 
 startTime=datetime(2022,6,8,0,0,0);
 endTime=datetime(2022,6,8,0,30,0);
 
 %% Tuning parameters
 
-% These two tuning parameters affect the classification
+% These tuning parameters affect the boundaries between the
+% convective/mixed/stratiform classifications
 pixRadDBZ=132; % Horizontal number of pixels over which reflectivity texture is calculated.
 % 3 km: 79; 5 km: 132; 7 km 185
 % Lower values tend to lead to more stratiform precipitation.
 upperLimDBZ=35; % This affects how reflectivity texture translates into convectivity.
 % Higher values lead to more stratiform precipitation.
-dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
-% Suggested values are: 0 dBZ for S, C, X, and Ku-band;
-% -10 dBZ for Ka-band; -20 dBZ for W-band
 stratMixed=0.4; % Convectivity boundary between strat and mixed.
 mixedConv=0.5; % Convectivity boundary between mixed and conv.
 
+dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
+% Suggested values are: 0 dBZ for S, C, X, and Ku-band;
+% -10 dBZ for Ka-band; -20 dBZ for W-band
+
+% These tuning parameter enlarge mixed and convective regions, join them
+% togethre and fill small holes
+enlargeMixed=5; % Enlarges and joins mixed regions
+enlargeConv=5; % Enlarges aned joins convective regions
+
 %% Loop through the files
-fileList=makeFileList(dataDir,startTime,endTime,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx20YYMMDDxhhmmss',1);
+fileList=makeFileList_spol(dataDir,startTime,endTime,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx20YYMMDDxhhmmss',1);
 
 for aa=1:length(fileList)
 
@@ -122,13 +132,13 @@ for aa=1:length(fileList)
 
         disp('Basic classification ...');
 
-        classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER);
+        classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER,enlargeMixed,enlargeConv);
 
         %% Sub classification
 
         disp('Sub classification ...');
 
-        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP);
+        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[]);
 
         %% Plot
 

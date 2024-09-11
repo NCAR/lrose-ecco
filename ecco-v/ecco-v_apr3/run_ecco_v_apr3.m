@@ -6,6 +6,9 @@
 clear all; % Clear workspace
 close all; % Close all figures
 
+% Add path to functions
+addpath(genpath('../ecco-v_functions/'));
+
 %% Input variables
 
 % Estimates of the melting layer and divergence level. These are used to
@@ -36,9 +39,23 @@ casefile='eccoCases_apr3.txt';
 
 %% Tuning parameters
 
-% These two tuning parameters affect the classification
+% These tuning parameters affect the boundaries between the
+% convective/mixed/stratiform classifications
 pixRadDBZ=5; % Horizontal number of pixels over which reflectivity texture is calculated.
+% Lower values tend to lead to more stratiform precipitation.
 upperLimDBZ=30; % This affects how reflectivity texture translates into convectivity.
+% Higher values lead to more stratiform precipitation.
+stratMixed=0.4; % Convectivity boundary between strat and mixed.
+mixedConv=0.5; % Convectivity boundary between mixed and conv.
+
+dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
+% Suggested values are: 0 dBZ for S, C, X, and Ku-band;
+% -10 dBZ for Ka-band; -20 dBZ for W-band
+
+% These tuning parameter enlarge mixed and convective regions, join them
+% togethre and fill small holes
+enlargeMixed=3; % Enlarges and joins mixed regions
+enlargeConv=3; % Enlarges aned joins convective regions
 
 % Echo below the altitude below is removed before processing starts
 % to limit the effect of ocean clutter
@@ -115,7 +132,6 @@ for aa=1:length(caseStart)
 
     disp('Calculating reflectivity texture ...');
 
-    dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
     dbzText=f_reflTexture(data.DBZ,pixRadDBZ,dbzBase);
 
     %% Convectivity
@@ -126,16 +142,13 @@ for aa=1:length(caseStart)
 
     disp('Basic classification ...');
 
-    stratMixed=0.4; % Convectivity boundary between strat and mixed.
-    mixedConv=0.5; % Convectivity boundary between mixed and conv.
-
-    classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER);
+    classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER,enlargeMixed,enlargeConv);
 
     %% Sub classification
 
     disp('Sub classification ...');
 
-    classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP);
+    classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[]);
 
     %% Plot
 
