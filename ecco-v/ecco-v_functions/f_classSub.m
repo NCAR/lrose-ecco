@@ -1,4 +1,4 @@
-function classSub=f_classSub(classIn,asl,topo,meltOrig,temp,elev,firstRow)
+function classSub=f_classSub(classIn,asl,topo,meltOrig,temp,elev,firstRow,surfAltLim)
 
 % 14 strat low
 % 16 strat mid
@@ -45,7 +45,7 @@ for ii=1:convAreas.NumObjects
 
     % Check if near surface
     aslArea=distAslTopo(convAreas.PixelIdxList{ii});
-    nearSurfPix=sum(aslArea<500);
+    nearSurfPix=sum(aslArea<500+surfAltLim);
     if nearSurfPix==0 % Not near surface: elevated
         % Near plane check
         if planePix>10 & median(elev(col1))>0

@@ -77,13 +77,15 @@ end
 
 % Find correct angle
 scanAng=-25:50/(size(data1.time,1)-1):25.01;
-[~,nadirInd]=min(abs(scanAng'-data1.roll),[],1);
+elevAll=scanAng'-data1.roll;
+[~,nadirInd]=min(abs(elevAll),[],1);
 nadirIndLin2D=sub2ind(size(data1.time),nadirInd,1:size(data1.time,2));
 
 % Get data from correct angle and rename variables
 data.time=data1.time(nadirIndLin2D);
 data.latitude=data1.lat(nadirIndLin2D);
 data.longitude=data1.lon(nadirIndLin2D);
+data.elevation=-90+abs(elevAll(nadirIndLin2D));
 data.asl=nan(size(data1.zhh14,3),length(data.time));
 data.DBZ=nan(size(data1.zhh14,3),length(data.time));
 data.VEL=nan(size(data1.zhh14,3),length(data.time));

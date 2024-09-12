@@ -1,4 +1,4 @@
-% ECCO-V for S-Pol RHI radar data.
+% ECCO-V for seapol RHI radar data.
 % Author: Ulrike Romatschke, NCAR-EOL
 % See https://doi.org/10.1175/JTECH-D-22-0019.1 for algorithm description
 
@@ -10,21 +10,26 @@ addpath(genpath('../ecco-v_functions/'));
 
 %% Input variables
 
+% Estimates of the melting layer and divergence level. These are used to
+% make the subclassification into shallow, mid, deep, etc.
+meltAlt=4.7; % Estimated altitude of melting layer in km
+divAlt=8; % Estimated altitude of divergence level in km
+
 % Directory path to RHI data. The data needs to be organized into
 % subdirectories by date in the format yyyymmdd (20220906). The dataDir
 % below needs to point to the parent directory of those subdirectories.
-dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/sband/v2.0/rhi/';
+dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1/rhi/';
 
 % Directory for output figures
-figdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/plots/ecco_v-RHIs/';
+figdir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1/plots/ecco_v-RHIs/';
 
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='off';
+showPlot='on';
 
-startTime=datetime(2022,6,8,0,0,0);
-endTime=datetime(2022,6,8,0,30,0);
+startTime=datetime(2022,7,29,10,55,0);
+endTime=datetime(2022,7,29,11,5,0);
 
 %% Tuning parameters
 
@@ -47,12 +52,20 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 enlargeMixed=5; % Enlarges and joins mixed regions
 enlargeConv=5; % Enlarges aned joins convective regions
 
+% Minimum altitude with good echo
+surfAltLim=1500; % ASL in m
+
 %% Loop through the files
-fileList=makeFileList_spol(dataDir,startTime,endTime,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx20YYMMDDxhhmmss',1);
+fileList=makeFileList_seapol(dataDir,startTime,endTime,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx20YYMMDDxhhmmss',1);
 
 for aa=1:length(fileList)
 
     disp(['File ',num2str(aa),' of ',num2str(length(fileList))]);
+
+    if ~strcmp(fileList{aa}(end-5:end-3),'RHI')
+        disp('Not an RHI file.')
+        continue
+    end
 
     %% Read data
 
@@ -62,11 +75,10 @@ for aa=1:length(fileList)
     % case. Then load the data
 
     dataFile=[];
-    dataFile.DBZ_F=[];
-    dataFile.TEMP_FOR_PID=[];
-    
+    dataFile.DBZ=[];
+        
     % Load data
-    dataFile=read_spol(fileList{aa},dataFile);
+    dataFile=read_seapol(fileList{aa},dataFile);
 
     %% Loop through RHIs
     for ii=1:size(dataFile,2)
@@ -94,29 +106,28 @@ for aa=1:length(fileList)
         [X,Y]=meshgrid(dataPol.range(1):(dataPol.range(2)-dataPol.range(1))/4:dataPol.range(end),0:0.1:25);
 
         % Reflectivity
-        dbzIn=dataPol.DBZ_F';
+        dbzIn=dataPol.DBZ';
         dbzIn=padarray(dbzIn,[1,1],nan,'both');
         intDBZ=scatteredInterpolant(double(Xin(:)),double(Yin(:)),dbzIn(:),'nearest');
         data.DBZ=intDBZ(double(X),double(Y));
-
-        % Temperature
-        tempIn=dataPol.TEMP_FOR_PID';
-        tempIn=padarray(tempIn,[1,1],nan,'both');
-        intTEMP=scatteredInterpolant(double(Xin(:)),double(Yin(:)),tempIn(:),'nearest');
-        data.TEMP=intTEMP(double(X),double(Y));
         
         %% Prepare data
                
         % % Remove specles
         % maskSub=~isnan(data.DBZ);
         % maskSub=bwareaopen(maskSub,10);
-        % 
+        %
         % data.DBZ(maskSub==0)=nan;
 
         % Create a fake melting layer based on meltAlt
         data.MELTING_LAYER=nan(size(data.DBZ));
-        data.MELTING_LAYER(data.TEMP<=0)=20;
-        data.MELTING_LAYER(data.TEMP>0)=10;
+        data.MELTING_LAYER(Y.*1000>=meltAlt.*1000)=20;
+        data.MELTING_LAYER(Y.*1000<meltAlt.*1000)=10;
+
+        % Create a fake temperature profile based on divAlt
+        data.TEMP=nan(size(data.DBZ));
+        data.TEMP(Y.*1000>=divAlt.*1000)=-30;
+        data.TEMP(Y.*1000<divAlt.*1000)=10;
 
         data.TOPO=0;
 
@@ -140,7 +151,7 @@ for aa=1:length(fileList)
 
         disp('Sub classification ...');
 
-        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[],0);
+        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[],surfAltLim);
 
         %% Plot
 
@@ -183,7 +194,7 @@ for aa=1:length(fileList)
         s1=nexttile(1);
         
         hold on
-        surf(Xin(2:end-1,2:end-1),Yin(2:end-1,2:end-1),dataPol.DBZ_F','edgecolor','none');
+        surf(Xin(2:end-1,2:end-1),Yin(2:end-1,2:end-1),dataPol.DBZ','edgecolor','none');
         view(2);
         ylabel('Altitude (km)');
         clim([-10 50]);
@@ -267,6 +278,6 @@ for aa=1:length(fileList)
 
         % Save the figure based on the start and end time
         set(gcf,'PaperPositionMode','auto')
-        print(f1,[figdir,'spol_',datestr(dataPol.time(1),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
+        print(f1,[figdir,'seapol_',datestr(dataPol.time(1),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
     end
 end

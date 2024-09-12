@@ -1,22 +1,58 @@
-% Calculate liquid water content from HCR ocean return
+% ECCO-V for CloudSat CPR radar data.
+% Author: Ulrike Romatschke, NCAR-EOL
+% See https://doi.org/10.1175/JTECH-D-22-0019.1 for algorithm description
 
-clear all;
-close all;
+clear all; % Clear workspace
+close all; % Close all figures
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Input variables %%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add path to functions
+addpath(genpath('../ecco-v_functions/'));
 
+%% Input variables
+
+% Estimates of the melting layer and divergence level. These are used to
+% make the subclassification into shallow, mid, deep, etc.
+meltAlt=3.5; % Estimated altitude of melting layer in km
+divAlt=6; % Estimated altitude of divergence level in km
+
+% Directory path to data.
+dataDir='/scr/snow2/rsfdata/projects/cset/cloudSat/GEOPROF/hdf/';
+
+% Input file
+infile='2015184230321_48842_CS_2B-GEOPROF_GRANULE_P1_R05_E06_F00.hdf';
+
+% Directory for output figures
+figdir='/scr/snow2/rsfdata/projects/cset/cloudSat/eccoPlots/';
+
+% Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
+% the screen and also be saved. If 'off', they will be only saved but will
+% not show on the screen while the code runs.
 showPlot='on';
 
 startTime=datetime(2015,7,4,0,5,30);
 endTime=datetime(2015,7,4,0,8,30);
 
-meltAlt=3.5; % Estimated altitude of melting layer in km
-divAlt=6; % Estimated altitude of divergence level in km
+%% Tuning parameters
 
-dataDir='/scr/snow2/rsfdata/projects/cset/cloudSat/GEOPROF/hdf/';
-infile='2015184230321_48842_CS_2B-GEOPROF_GRANULE_P1_R05_E06_F00.hdf';
+% These tuning parameters affect the boundaries between the
+% convective/mixed/stratiform classifications
+pixRadDBZ=3; % Horizontal number of pixels over which reflectivity texture is calculated.
+% 3 km: 79; 5 km: 132; 7 km 185
+% Lower values tend to lead to more stratiform precipitation.
+upperLimDBZ=20; % This affects how reflectivity texture translates into convectivity.
+% Higher values lead to more stratiform precipitation.
+stratMixed=0.4; % Convectivity boundary between strat and mixed.
+mixedConv=0.5; % Convectivity boundary between mixed and conv.
 
-figdir=['/scr/sci/romatsch/other/convStratPaperHCR/'];
+dbzBase=-20; % Reflectivity base value which is subtracted from DBZ.
+% Suggested values are: 0 dBZ for S, C, X, and Ku-band;
+% -10 dBZ for Ka-band; -20 dBZ for W-band
+
+% These tuning parameter enlarge mixed and convective regions, join them
+% togethre and fill small holes
+enlargeMixed=5; % Enlarges and joins mixed regions
+enlargeConv=3; % Enlarges aned joins convective regions
+
 
 %% Read data
 
@@ -86,31 +122,24 @@ ylimUpper=(max(data.asl(~isnan(data.DBZ)))./1000)+0.5;
 
 disp('Calculating reflectivity texture ...');
 
-pixRadDBZ=3; % Radius over which texture is calculated in pixels. Default is 50.
-dbzBase=-10; % Reflectivity base value which is subtracted from DBZ.
-
 dbzText=f_reflTexture(data.DBZ,pixRadDBZ,dbzBase);
 
 %% Convectivity
 
 % Convectivity
-upperLimDBZ=20;
 convDBZ=1/upperLimDBZ.*dbzText;
 
 %% Basic classification
 
 disp('Basic classification ...');
 
-stratMixed=0.4; % Convectivity boundary between strat and mixed.
-mixedConv=0.5; % Convectivity boundary between mixed and conv.
-
-classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER);
+classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER,enlargeMixed,enlargeConv);
 
 %% Sub classification
 
 disp('Sub classification ...');
 
-classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP);
+classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[],0);
 
 %% Plot strat conv
 

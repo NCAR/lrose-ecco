@@ -27,7 +27,7 @@ figdir='/scr/virga1/rsfdata/projects/nasa-apr3/ecco-v-Figs/';
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='on';
+showPlot='off';
 
 % casefile is a text file with start and end times of the data to process.
 % The format is yyyy mm dd HH MM for the start time followed by yyyy mm dd
@@ -54,13 +54,14 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 
 % These tuning parameter enlarge mixed and convective regions, join them
 % togethre and fill small holes
-enlargeMixed=3; % Enlarges and joins mixed regions
+enlargeMixed=4; % Enlarges and joins mixed regions
 enlargeConv=3; % Enlarges aned joins convective regions
 
 % Echo below the altitude below is removed before processing starts
 % to limit the effect of ocean clutter
 surfAltLim=1000; % ASL in m
 
+firstGate=1; % First range gate with good data
 %% Loop through the cases
 
 caseList=readtable(casefile);
@@ -148,7 +149,7 @@ for aa=1:length(caseStart)
 
     disp('Sub classification ...');
 
-    classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[]);
+    classSub=f_classSub(classBasic,data.asl,data.TOPO,data.MELTING_LAYER,data.TEMP,data.elevation,firstGate,surfAltLim);
 
     %% Plot
 
