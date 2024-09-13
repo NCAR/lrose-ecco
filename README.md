@@ -1,1 +1,6 @@
 # lrose-ecco
+The Echo Classification from COnvectivity (ECCO) algorithm identifies convective and stratiform types of radar echo in three dimensions. It is based on the calculation of reflectivity texture — a combination of the intensity and the heterogeneity of the radar echoes on each horizontal plane in a 3D Cartesian volume. Reflectivity texture is translated into convectivity, which is designed to be a quantitative measure of the convective nature of each 3D radar grid point. It ranges from 0 (100% stratiform) to 1 (100% convective). By thresholding convectivity, a more traditional qualitative categorization is obtained, which classifies radar echoes as convective, mixed, or stratiform, again in 3 dimensions.
+
+The ecco folder contains the basic 3D ECCO algorithm which is mostly written in c++. It is appliclable to 3D and 2D (horizontal) Cartesian radar grids. For a description of the algorithm see https://doi.org/10.1175/JTECH-D-22-0018.1.
+
+The ecco-v forlder contains the ECCO-V algorithm which can be applied to 2D Cartesian radar grids in the vertical dimension (i.e., time (or range) x height). There are several instances of the scripts which were adapted for different radars (airborne, spaceborne, and ground-based RHI scans). For a description of the algorithm, which is written in Matlab, see https://doi.org/10.1175/JTECH-D-22-0019.1.
