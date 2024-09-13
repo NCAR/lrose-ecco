@@ -18,7 +18,14 @@ divAlt=8; % Estimated altitude of divergence level in km
 % Directory path to RHI data. The data needs to be organized into
 % subdirectories by date in the format yyyymmdd (20220906). The dataDir
 % below needs to point to the parent directory of those subdirectories.
+
 dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1/rhi/';
+startTime=datetime(2022,7,29,10,55,0);
+endTime=datetime(2022,7,29,11,5,0);
+
+% dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1/ting-yu/';
+% startTime=datetime(2022,7,29,10,0,0);
+% endTime=datetime(2022,7,29,14,0,0);
 
 % Directory for output figures
 figdir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1/plots/ecco_v-RHIs/';
@@ -28,17 +35,14 @@ figdir='/scr/cirrus3/rsfdata/projects/precip/grids/seapol/radarPolar/moments/qc1
 % not show on the screen while the code runs.
 showPlot='on';
 
-startTime=datetime(2022,7,29,10,55,0);
-endTime=datetime(2022,7,29,11,5,0);
-
 %% Tuning parameters
 
 % These tuning parameters affect the boundaries between the
 % convective/mixed/stratiform classifications
-pixRadDBZ=132; % Horizontal number of pixels over which reflectivity texture is calculated.
-% 3 km: 79; 5 km: 132; 7 km 185
+pixRadDBZ=105; % Horizontal number of pixels over which reflectivity texture is calculated.
+% 3 km: 105; 5 km: 185; 7 km 265
 % Lower values tend to lead to more stratiform precipitation.
-upperLimDBZ=35; % This affects how reflectivity texture translates into convectivity.
+upperLimDBZ=30; % This affects how reflectivity texture translates into convectivity.
 % Higher values lead to more stratiform precipitation.
 stratMixed=0.4; % Convectivity boundary between strat and mixed.
 mixedConv=0.5; % Convectivity boundary between mixed and conv.
@@ -49,8 +53,8 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 
 % These tuning parameter enlarge mixed and convective regions, join them
 % togethre and fill small holes
-enlargeMixed=5; % Enlarges and joins mixed regions
-enlargeConv=5; % Enlarges aned joins convective regions
+enlargeMixed=3; % Enlarges and joins mixed regions
+enlargeConv=3; % Enlarges aned joins convective regions
 
 % Minimum altitude with good echo
 surfAltLim=1500; % ASL in m
@@ -76,12 +80,15 @@ for aa=1:length(fileList)
 
     dataFile=[];
     dataFile.DBZ=[];
+    dataFile.TEMP_FOR=[];
         
     % Load data
     dataFile=read_seapol(fileList{aa},dataFile);
 
     %% Loop through RHIs
     for ii=1:size(dataFile,2)
+        dataPol=[];
+        data=[];
         
         dataPol=dataFile(ii);
 
@@ -110,6 +117,14 @@ for aa=1:length(fileList)
         dbzIn=padarray(dbzIn,[1,1],nan,'both');
         intDBZ=scatteredInterpolant(double(Xin(:)),double(Yin(:)),dbzIn(:),'nearest');
         data.DBZ=intDBZ(double(X),double(Y));
+
+        % Temperature
+        if isfield(dataPol,'TEMP_FOR')
+            tempIn=dataPol.TEMP_FOR';
+            tempIn=padarray(tempIn,[1,1],nan,'both');
+            intTEMP=scatteredInterpolant(double(Xin(:)),double(Yin(:)),tempIn(:),'nearest');
+            data.TEMP=intTEMP(double(X),double(Y));
+        end
         
         %% Prepare data
                
@@ -119,15 +134,23 @@ for aa=1:length(fileList)
         %
         % data.DBZ(maskSub==0)=nan;
 
-        % Create a fake melting layer based on meltAlt
-        data.MELTING_LAYER=nan(size(data.DBZ));
-        data.MELTING_LAYER(Y.*1000>=meltAlt.*1000)=20;
-        data.MELTING_LAYER(Y.*1000<meltAlt.*1000)=10;
+        if isfield(data,'TEMP')
+            % Create a fake melting layer based on meltAlt
+            data.MELTING_LAYER=nan(size(data.DBZ));
+            data.MELTING_LAYER(data.TEMP<=0)=20;
+            data.MELTING_LAYER(data.TEMP>0)=10;
+        else
 
-        % Create a fake temperature profile based on divAlt
-        data.TEMP=nan(size(data.DBZ));
-        data.TEMP(Y.*1000>=divAlt.*1000)=-30;
-        data.TEMP(Y.*1000<divAlt.*1000)=10;
+            % Create a fake melting layer based on meltAlt
+            data.MELTING_LAYER=nan(size(data.DBZ));
+            data.MELTING_LAYER(Y.*1000>=meltAlt.*1000)=20;
+            data.MELTING_LAYER(Y.*1000<meltAlt.*1000)=10;
+
+            % Create a fake temperature profile based on divAlt
+            data.TEMP=nan(size(data.DBZ));
+            data.TEMP(Y.*1000>=divAlt.*1000)=-30;
+            data.TEMP(Y.*1000<divAlt.*1000)=10;
+        end
 
         data.TOPO=0;
 
