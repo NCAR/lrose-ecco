@@ -53,7 +53,7 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 % -10 dBZ for Ka-band; -20 dBZ for W-band
 
 % These tuning parameter enlarge mixed and convective regions, join them
-% togethre and fill small holes
+% together and fill small holes
 enlargeMixed=4; % Enlarges and joins mixed regions
 enlargeConv=3; % Enlarges aned joins convective regions
 
@@ -61,7 +61,12 @@ enlargeConv=3; % Enlarges aned joins convective regions
 % to limit the effect of ocean clutter
 surfAltLim=1000; % ASL in m
 
+% Remove "speckles". Removes contiguous radar echoes with less than speckNum
+% pixels. (To remove noise in clear air.)
+speckNum=10;
+
 firstGate=1; % First range gate with good data
+
 %% Loop through the cases
 
 caseList=readtable(casefile);
@@ -113,9 +118,9 @@ for aa=1:length(caseStart)
     % Remove surface echo below a certain altitude
     data.DBZ(data.asl<surfAltLim)=nan;
 
-    % Remove specles
+    % Remove speckles
     maskSub=~isnan(data.DBZ);
-    maskSub=bwareaopen(maskSub,10);
+    maskSub=bwareaopen(maskSub,speckNum);
 
     data.DBZ(maskSub==0)=nan;
 
