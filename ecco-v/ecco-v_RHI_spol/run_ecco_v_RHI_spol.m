@@ -18,10 +18,14 @@ dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/sba
 % Directory for output figures
 figdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/plots/ecco_v-RHIs/';
 
+% Directory for output mat files
+saveFiles=1; % If output mat files should be saved, set to 1. If not, set to 0.
+outdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/radarPolar/qc2/rate/plots/ecco_v-RHIs/matFiles/';
+
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='off';
+showPlot='on';
 
 startTime=datetime(2022,6,8,0,0,0);
 endTime=datetime(2022,6,8,0,30,0);
@@ -46,6 +50,10 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 % togethre and fill small holes
 enlargeMixed=5; % Enlarges and joins mixed regions
 enlargeConv=5; % Enlarges aned joins convective regions
+
+% Echo below this altitude is removed before processing
+% to limit the effect of ocean clutter
+surfAltLim=1000; % ASL in m
 
 %% Loop through the files
 fileList=makeFileList_spol(dataDir,startTime,endTime,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx20YYMMDDxhhmmss',1);
@@ -91,7 +99,7 @@ for aa=1:length(fileList)
         [phi,r]=meshgrid(deg2rad(elevPad),rangePad);
         [Xin,Yin]=pol2cart(phi,r);
 
-        [X,Y]=meshgrid(dataPol.range(1):(dataPol.range(2)-dataPol.range(1))/4:dataPol.range(end),0:0.1:25);
+        [X,Y]=meshgrid(dataPol.range(1):(dataPol.range(2)-dataPol.range(1))/4:dataPol.range(end),surfAltLim/1000:0.1:25);
 
         % Reflectivity
         dbzIn=dataPol.DBZ_F';
@@ -140,7 +148,20 @@ for aa=1:length(fileList)
 
         disp('Sub classification ...');
 
-        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[],0);
+        classSub=f_classSub(classBasic,Y.*1000,data.TOPO,data.MELTING_LAYER,data.TEMP,[],[],surfAltLim);
+
+        %% Save output data
+        if saveFiles
+            disp('Saving data ...');
+
+            ecco.X=X;
+            ecco.Y=Y;
+            ecco.DBZ=data.DBZ;
+            ecco.CONVECTIVITY=convDBZ;
+            ecco.ECHO_TYPE=classSub;
+
+            save([outdir,'spol_',datestr(dataPol.time(1),'yyyymmdd_HHMMSS'),'.mat'],'ecco');
+        end
 
         %% Plot
 
