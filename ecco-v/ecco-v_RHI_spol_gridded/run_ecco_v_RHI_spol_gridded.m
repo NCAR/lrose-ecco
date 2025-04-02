@@ -19,8 +19,8 @@ dataDir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/rhiGriddedMichaelBell/'
 figdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/rhiGriddedMichaelBell/plots/';
 
 % Directory for output mat files
-saveFiles=0; % If output mat files should be saved, set to 1. If not, set to 0.
-outdir=[];
+saveFiles=1; % If output mat files should be saved, set to 1. If not, set to 0.
+outdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/rhiGriddedMichaelBell/matFiles/';
 
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
@@ -34,7 +34,7 @@ endTime=datetime(2022,5,26,0,30,0);
 
 % These tuning parameters affect the boundaries between the
 % convective/mixed/stratiform classifications
-pixRadDBZ=132; % Horizontal number of pixels over which reflectivity texture is calculated.
+pixRadDBZ=79; % Horizontal number of pixels over which reflectivity texture is calculated.
 % 3 km: 79; 5 km: 132; 7 km 185
 % Lower values tend to lead to more stratiform precipitation.
 upperLimDBZ=35; % This affects how reflectivity texture translates into convectivity.
@@ -53,7 +53,7 @@ enlargeConv=5; % Enlarges aned joins convective regions
 
 % Echo below this altitude is removed before processing
 % to limit the effect of ocean clutter
-surfAltLim=1000; % ASL in m
+surfAltLim=100; % ASL in m
 
 %% Loop through the files
 fileList=makeFileList_spol(dataDir,startTime,endTime,'xxxxxxxxxxxx20YYMMDDxhhmm',1);
@@ -86,8 +86,13 @@ for aa=1:length(fileList)
             end
         end
 
-        data.Z=repmat(data.Z,1,size(data.DBZ_F,2));
-        data.R=repmat(data.R,size(data.DBZ_F,1),1);
+        data.Z=repmat(data.Z,1,size(data.DBZ_F,2))./1000;
+        data.R=repmat(data.R,size(data.DBZ_F,1),1)./1000;
+
+        data.DBZ_F(data.DBZ_F==-9999)=nan;
+
+        % Remove surface echo below a certain altitude
+        data.DBZ_F(data.Z.*1000<surfAltLim)=nan;
                
         % % Remove specles
         % maskSub=~isnan(data.DBZ);
@@ -128,13 +133,13 @@ for aa=1:length(fileList)
         if saveFiles
             disp('Saving data ...');
 
-            ecco.X=X;
-            ecco.Y=Y;
-            ecco.DBZ=data.DBZ;
+            ecco.X=data.R;
+            ecco.Y=data.Z;
+            ecco.DBZ=data.DBZ_F;
             ecco.CONVECTIVITY=convDBZ;
             ecco.ECHO_TYPE=classSub;
 
-            save([outdir,'spol_',datestr(dataPol.time(1),'yyyymmdd_HHMMSS'),'.mat'],'ecco');
+            save([outdir,'spol_',datestr(data.time(1),'yyyymmdd_HHMMSS'),'.mat'],'ecco');
         end
 
         %% Plot
@@ -166,15 +171,16 @@ for aa=1:length(fileList)
             0.7,0,0];
 
         % Determine upper limit of y axis based on where the valid data ends
-        ylimUpper=25;
+        xlimUpper=max(data.R(:));
+        ylimUpper=10.5;
                
         close all
 
         f1 = figure('Position',[200 500 1200 1200],'DefaultAxesFontSize',12,'visible',showPlot);
         colormap('jet');
-        t = tiledlayout(4,1,'TileSpacing','tight','Padding','tight');
-        
-        % Plot polar reflectivity
+        t = tiledlayout(3,1,'TileSpacing','tight','Padding','tight');
+
+        % Plot reflectivity
         s1=nexttile(1);
         
         hold on
@@ -182,28 +188,8 @@ for aa=1:length(fileList)
         view(2);
         ylabel('Altitude (km)');
         clim([-10 50]);
-        xlim([0,max(dataPol.range)]);
-        ylim([0,25]);
-
-        xlabel('Range (km)');
-        ylabel('Altitude (km)');
-
-        cb1=colorbar;
-        grid on
-        box on
-
-        title('Polar reflectivity (dBZ)');
-
-        % Plot Cartesian reflectivity
-        s2=nexttile(2);
-        
-        hold on
-        surf(X,Y,data.DBZ,'edgecolor','none');
-        view(2);
-        ylabel('Altitude (km)');
-        clim([-10 50]);
-        xlim([0,max(dataPol.range)]);
-        ylim([0,25]);
+        xlim([0,xlimUpper]);
+        ylim([0,ylimUpper]);
 
         xlabel('Range (km)');
         ylabel('Altitude (km)');
@@ -212,18 +198,18 @@ for aa=1:length(fileList)
         grid on
         box on
 
-        title('Cartesian reflectivity (dBZ)');
+        title('Reflectivity (dBZ)');
 
         % Plot convectivity
-        s3=nexttile(3);
+        s2=nexttile(2);
         
         hold on
-        surf(X,Y,convDBZ,'edgecolor','none');
+        surf(data.R,data.Z,convDBZ,'edgecolor','none');
         view(2);
         ylabel('Altitude (km)');
         clim([0 1]);
-        xlim([0,max(dataPol.range)]);
-        ylim([0,25]);
+        xlim([0,xlimUpper]);
+        ylim([0,ylimUpper]);
 
         xlabel('Range (km)');
         ylabel('Altitude (km)');
@@ -235,20 +221,20 @@ for aa=1:length(fileList)
         title('Convectivity');
 
         % Plot classification
-        s4=nexttile(4);
+        s3=nexttile(3);
         
         hold on
-        surf(X,Y,classSubPlot,'edgecolor','none');
+        surf(data.R,data.Z,classSubPlot,'edgecolor','none');
         view(2);
         ylabel('Altitude (km)');
         clim([-10 60]);
-        xlim([0,max(dataPol.range)]);
-        ylim([0,25]);
+        xlim([0,xlimUpper]);
+        ylim([0,ylimUpper]);
 
         xlabel('Range (km)');
         ylabel('Altitude (km)');
 
-        s4.Colormap=colmapSC;
+        s3.Colormap=colmapSC;
         clim([0.5 9.5]);
         cb4=colorbar;
         cb4.Ticks=1:9;
@@ -262,6 +248,6 @@ for aa=1:length(fileList)
 
         % Save the figure based on the start and end time
         set(gcf,'PaperPositionMode','auto')
-        print(f1,[figdir,'spol_',datestr(dataPol.time(1),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
+        print(f1,[figdir,'spol_',datestr(data.time(1),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
     
 end
