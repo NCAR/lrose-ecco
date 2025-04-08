@@ -1,17 +1,22 @@
-function [data] = read_apr3_3D_nc(fileList,indata,startTime,endTime)
+function [data] = read_cloudnet(fileList,indata,startTime,endTime)
 
 vars = fieldnames(indata);
 
 % Read first file and figure out format
 infile=fileList{1};
 
-startTimeFile=datetime(1970,1,1);
-timeRead=ncread(infile,'lores_scantime')';
-indata.time=startTimeFile+seconds(timeRead);
-indata.lores_lat=ncread(infile,'lores_lat');
-indata.lores_lon=ncread(infile,'lores_lon');
-indata.lores_roll=ncread(infile,'lores_roll');
-indata.lores_alt3D=ncread(infile,'lores_alt3D');
+startTimeFile=datetime(startTime.Year,startTime.Month,startTime.Day);
+timeRead=ncread(infile,'time')';
+indata.time=startTimeFile+hours(timeRead);
+indata.asl=ncread(infile,'height');
+indata.asl=double(repmat(indata.asl,1,length(indata.time)));
+indata.TOPO=ncread(infile,'altitude');
+indata.TOPO=double(repmat(indata.TOPO,1,length(indata.time)));
+
+timeReadM=ncread(infile,'model_time')';
+timeM=startTimeFile+hours(timeReadM);
+aslM=double(ncread(infile,'model_height'));
+temperature=ncread(infile,'temperature');
 
 for ii=1:size(vars,1)
     try
@@ -22,81 +27,18 @@ for ii=1:size(vars,1)
     end
 end
 
-% Organize dimensions into the order beam, time, range
+timeMn=datenum(timeM);
+timen=datenum(indata.time);
+
+% Interpolate temperature
+indata.TEMP=interp2(repmat(timeMn,length(aslM),1),repmat(aslM,1,length(timeM)),temperature,repmat(timen,size(indata.asl,1),1),indata.asl);
+indata.TEMP=indata.TEMP-273.15;
+
+% Cut out correct time
+timeInds=find(indata.time>=startTime & indata.time<=endTime);
 allVars=fieldnames(indata);
 for ii=1:size(allVars,1)
-    if strcmp((allVars{ii}),'time')
-        data1.time=permute(indata.time,[2,1]);
-    elseif length(size(indata.(allVars{ii})))==3
-        data1.(allVars{ii})=permute(indata.(allVars{ii}),[2,3,1]);
-    else
-        data1.(allVars{ii})=indata.(allVars{ii});
-    end
+    data.(allVars{ii})=indata.(allVars{ii})(:,timeInds);
 end
 
-% Read rest of files
-for jj=2:length(fileList)
-    indata=[];
-    infile=fileList{jj};
-    for ii=1:size(allVars,1)
-        if strcmp((allVars{ii}),'time')
-            timeRead=ncread(infile,'lores_scantime')';
-            indata.time=startTimeFile+seconds(timeRead);
-        else
-            indata.(allVars{ii})=ncread(infile,allVars{ii});
-        end
-    end
-    % Don't read data if range dimension does not agree
-    if size(data1.lores_alt3D,3)~=size(indata.lores_alt3D,1)
-        disp(['Skipping file ',infile,'because dimensions do not agree.']);
-        continue
-    end
-    % Organize dimensions into the order beam, time, range
-    allVars=fieldnames(indata);
-    for ii=1:size(allVars,1)
-        if strcmp((allVars{ii}),'time')
-            data1.time=cat(2,data1.time,permute(indata.time,[2,1]));
-        elseif length(size(indata.(allVars{ii})))==3
-            data1.(allVars{ii})=cat(2,data1.(allVars{ii}),permute(indata.(allVars{ii}),[2,3,1]));
-        else
-            data1.(allVars{ii})=cat(2,data1.(allVars{ii}),indata.(allVars{ii}));
-        end
-    end
 end
-
-midTime=data1.time(12,:);
-
-timeInds=find(midTime>=startTime & midTime<=endTime);
-for ii=1:size(allVars,1)
-    if length(size(indata.(allVars{ii})))==3
-        data1.(allVars{ii})=data1.(allVars{ii})(:,timeInds,:);
-    else
-        data1.(allVars{ii})=data1.(allVars{ii})(:,timeInds);
-    end
-end
-
-% Find correct angle
-scanAng=-25:50/(size(data1.time,1)-1):25.01;
-elevAll=scanAng'-data1.lores_roll;
-[~,nadirInd]=min(abs(elevAll),[],1);
-nadirIndLin2D=sub2ind(size(data1.time),nadirInd,1:size(data1.time,2));
-
-% Get data from correct angle and rename variables
-data.time=data1.time(nadirIndLin2D);
-data.latitude=data1.lores_lat(nadirIndLin2D);
-data.longitude=data1.lores_lon(nadirIndLin2D);
-data.elevation=-90+abs(elevAll(nadirIndLin2D));
-data.TOPO=data1.lores_Topo_Hm(nadirIndLin2D);
-data.asl=nan(size(data1.lores_zhh14,3),length(data.time));
-data.DBZ=nan(size(data1.lores_zhh14,3),length(data.time));
-data.VEL=nan(size(data1.lores_zhh14,3),length(data.time));
-for ii=1:size(data.DBZ,1)
-    altii=data1.lores_alt3D(:,:,ii);
-    data.asl(ii,:)=altii(nadirIndLin2D);
-    zii=data1.lores_zhh14(:,:,ii);
-    data.DBZ(ii,:)=zii(nadirIndLin2D);
-    vii=data1.lores_vel14c(:,:,ii);
-    data.VEL(ii,:)=vii(nadirIndLin2D);
-end
-end
-

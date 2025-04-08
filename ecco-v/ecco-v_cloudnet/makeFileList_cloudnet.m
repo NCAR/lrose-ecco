@@ -1,4 +1,4 @@
-function [fileList] = makeFileList_apr3(indir,startTime,endTime,fileFormat,subdir)
+function [fileList] = makeFileList_cloudnet(indir,startTime,endTime,fileFormat,subdir)
 %Make list with files within time range based on the start time of the
 %files
 % indir: directory where the files are located (see also subdir)
@@ -53,10 +53,7 @@ if subdir
     
     allFileList=[];
     for jj=1:size(rangeDirs,1)
-        subFileList=dir([indir,rangeDirs(jj,:),'/*KU*']);
-        if isempty(subFileList)
-            subFileList=dir([indir,rangeDirs(jj,:),'/*.iwrf_ts']);
-        end
+        subFileList=dir([indir,rangeDirs(jj,:),'/*.nc']);
         allFileList=cat(1,allFileList,subFileList);
     end
 else
@@ -69,53 +66,9 @@ end
 fileList={};
 if ~isempty(allFileList)
     filenames={allFileList(:,:).name};
-    if ~isempty(mmDig) & ~isempty(ssDig)
-        for ii=1:length(filenames)
-            fileYear=strcat(century,filenames{ii}(YYDig(1):YYDig(2)));
-            fileStart=datetime(str2num(fileYear),str2num(filenames{ii}(MMDig(1):MMDig(2))),...
-                str2num(filenames{ii}(DDDig(1):DDDig(2))),str2num(filenames{ii}(hhDig(1):hhDig(2))),...
-                str2num(filenames{ii}(mmDig(1):mmDig(2))),str2num(filenames{ii}(ssDig(1):ssDig(2))));
-            if isempty(fileList) & ii~=1 & fileStart>startTime & fileStart>endTime
-                fileList{end+1}=[allFileList(ii-1).folder,'/',allFileList(ii-1).name];
-            elseif fileStart>=startTime & fileStart<=endTime
-                if isempty(fileList) & ii~=1 & fileStart~=startTime
-                    fileList{end+1}=[allFileList(ii-1).folder,'/',allFileList(ii-1).name];
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                else
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                end
-            end
-        end
-    elseif ~isempty(mmDig)
-        for ii=1:length(filenames)
-            fileYear=strcat(century,filenames{ii}(YYDig(1):YYDig(2)));
-            fileStart=datetime(str2num(fileYear),str2num(filenames{ii}(MMDig(1):MMDig(2))),...
-                str2num(filenames{ii}(DDDig(1):DDDig(2))),str2num(filenames{ii}(hhDig(1):hhDig(2))),...
-                str2num(filenames{ii}(mmDig(1):mmDig(2))),0);
-            if fileStart>=startTime & fileStart<=endTime
-                if isempty(fileList) & ii~=1
-                    fileList{end+1}=[allFileList(ii-1).folder,'/',allFileList(ii-1).name];
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                else
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                end
-            end
-        end
-    else
-        for ii=1:length(filenames)
-            fileYear=strcat(century,filenames{ii}(YYDig(1):YYDig(2)));
-            fileStart=datetime(str2num(fileYear),str2num(filenames{ii}(MMDig(1):MMDig(2))),...
-                str2num(filenames{ii}(DDDig(1):DDDig(2))),str2num(filenames{ii}(hhDig(1):hhDig(2))),0,0);
-            if fileStart>=startTime & fileStart<=endTime
-                if isempty(fileList) & ii~=1
-                    fileList{end+1}=[allFileList(ii-1).folder,'/',allFileList(ii-1).name];
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                else
-                    fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
-                end
-            end
-        end
+
+    for ii=1:length(filenames)
+        fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
     end
-end
 end
 

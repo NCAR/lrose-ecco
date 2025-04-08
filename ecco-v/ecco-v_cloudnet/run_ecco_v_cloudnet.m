@@ -1,5 +1,5 @@
 
-% ECCO-V for NASA APR3 radar data.
+% ECCO-V for Cloudnet radar data.
 % Author: Ulrike Romatschke, NCAR-EOL
 % See https://doi.org/10.1175/JTECH-D-22-0019.1 for algorithm description
 
@@ -11,12 +11,7 @@ addpath(genpath('../ecco-v_functions/'));
 
 %% Input variables
 
-% Estimates of the melting layer and divergence level. These are used to
-% make the subclassification into shallow, mid, deep, etc.
-meltAlt=4.7; % Estimated altitude of melting layer in km
-divAlt=8; % Estimated altitude of divergence level in km
-
-% Directory path to APR 3 data. The data needs to be organized into
+% Directory path to Cloudnet data. The data needs to be organized into
 % subdirectories by date in the format yyyymmdd (20220906). The dataDir
 % below needs to point to the parent directory of those subdirectories.
 dataDir='/scr/virga1/rsfdata/projects/cloudnet/';
@@ -40,21 +35,27 @@ casefile='eccoCases_cloudnet.txt';
 
 % These tuning parameters affect the boundaries between the
 % convective/mixed/stratiform classifications
-pixRadDBZ=5; % Horizontal number of pixels over which reflectivity texture is calculated.
+pixRad=19; % Horizontal number of pixels over which textures are calculated.
 % Lower values tend to lead to more stratiform precipitation.
-upperLimDBZ=30; % This affects how reflectivity texture translates into convectivity.
+
+upperLimDBZ=12; % This affects how reflectivity texture translates into convectivity.
 % Higher values lead to more stratiform precipitation.
+upperLimVEL=5; % This affects how velocity texture translates into convectivity.
+% Higher values lead to more stratiform precipitation.
+
 stratMixed=0.4; % Convectivity boundary between strat and mixed.
 mixedConv=0.5; % Convectivity boundary between mixed and conv.
 
-dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
+dbzBase=-10; % Reflectivity base value which is subtracted from DBZ.
 % Suggested values are: 0 dBZ for S, C, X, and Ku-band;
-% -10 dBZ for Ka-band; -20 dBZ for W-band
+% -10 dBZ for Ka-band and W-band
+velBase=-20; % Velocity base value which is subtracted from VEL.
+% Suggested value is -20 m/s which will handle most up/down drafts.
 
 % These tuning parameter enlarge mixed and convective regions, join them
 % together and fill small holes
-enlargeMixed=4; % Enlarges and joins mixed regions
-enlargeConv=3; % Enlarges aned joins convective regions
+enlargeMixed=1; % Enlarges and joins mixed regions
+enlargeConv=1; % Enlarges aned joins convective regions
 
 % Echo below the altitude below is removed before processing starts
 % to limit the effect of ocean clutter
@@ -92,15 +93,21 @@ for aa=1:length(caseStart)
     fileList=makeFileList_cloudnet(dataDir,startTime,endTime,'20YYMMDD',1);
 
     data=[];
-    data.lores_zhh14=[];
-    data.lores_vel14c=[];
-    data.lores_Topo_Hm=[];
-
+    data.Z=[];
+    data.v=[];
+    data.category_bits=[];
+       
     % Load data
-    data=read_apr3_3D_nc(fileList,data,startTime,endTime);
+    data=read_cloudnet(fileList,data,startTime,endTime);
 
-    data.TOPO=0;
+    data.elevation=repmat(90,1,length(data.time));
 
+    data.DBZ=data.Z;
+    data=rmfield(data,'Z');
+
+    data.VEL=data.v;
+    data=rmfield(data,'v');
+        
     %% Prepare data
 
     % Remove surface echo below a certain altitude
@@ -112,32 +119,49 @@ for aa=1:length(caseStart)
 
     data.DBZ(maskSub==0)=nan;
 
-    % Create a fake melting layer based on meltAlt
-    data.MELTING_LAYER=nan(size(data.DBZ));
-    data.MELTING_LAYER(data.asl>=meltAlt.*1000)=20;
-    data.MELTING_LAYER(data.asl<meltAlt.*1000)=10;
+    % Convert categories to melting layer
+    % De-code bits
+    cBits=nan(size(data.DBZ,1),size(data.DBZ,2),6);
+    for ii=1:size(data.DBZ,1)
+        for jj=1:size(data.DBZ,2)
+            cBits(ii,jj,:)=bitget(data.category_bits(ii,jj),1:6,'int32');
+        end
+    end
 
-    % Create a fake temperature profile based on divAlt
-    data.TEMP=nan(size(data.DBZ));
-    data.TEMP(data.asl>=divAlt.*1000)=-30;
-    data.TEMP(data.asl<divAlt.*1000)=10;
+    data.MELTING_LAYER=nan(size(data.DBZ));
+    data.MELTING_LAYER(cBits(:,:,3)==0)=10;
+    data.MELTING_LAYER(cBits(:,:,3)==1)=20;
 
     %% Texture from reflectivity
 
     disp('Calculating reflectivity texture ...');
 
-    dbzText=f_reflTexture(data.DBZ,pixRadDBZ,dbzBase);
+    dbzText=f_reflTexture(data.DBZ,pixRad,dbzBase);
+
+    %% Texture from velocity
+
+    disp('Calculating velocity texture ...');
+
+    velText=f_velTexture(data.VEL,pixRad,velBase);
 
     %% Convectivity
 
     convDBZ=1/upperLimDBZ.*dbzText;
 
+    convVEL=1/upperLimVEL.*velText;
+
+    convectivity=convDBZ.*convVEL;
+    convectivity(convectivity>1)=1;
+    convectivity(isnan(convectivity))=convDBZ(isnan(convectivity));
+
     %% Basic classification
 
     disp('Basic classification ...');
 
-    classBasic=f_classBasic(convDBZ,stratMixed,mixedConv,data.MELTING_LAYER,enlargeMixed,enlargeConv);
+    classBasic=f_classBasic(flipud(convectivity),flipud(stratMixed),flipud(mixedConv),flipud(data.MELTING_LAYER),enlargeMixed,enlargeConv);
 
+    classBasic=flipud(classBasic);
+    
     %% Sub classification
 
     disp('Sub classification ...');
@@ -188,18 +212,18 @@ for aa=1:length(caseStart)
 
     close all
 
-    f1 = figure('Position',[200 500 1600 1100],'DefaultAxesFontSize',12,'visible',showPlot);
+    f1 = figure('Position',[200 500 1600 1200],'DefaultAxesFontSize',12,'visible',showPlot);
 
     colormap('jet');
 
     % Plot reflectivity
-    s1=subplot(4,1,1);
+    s1=subplot(5,1,1);
 
     hold on
     surf(data.time,data.asl./1000,data.DBZ,'edgecolor','none');
     view(2);
     ylabel('Altitude (km)');
-    clim([-10 60]);
+    clim([-30 25]);
     ylim([0 ylimUpper]);
     xlim([data.time(1),data.time(end)]);
     set(gca,'XTickLabel',[]);
@@ -207,13 +231,31 @@ for aa=1:length(caseStart)
     grid on
     box on
 
-    text(textDate,textAlt,'(a) Reflectivity (dBZ)','FontSize',11,'FontWeight','bold');
+    title('(a) Reflectivity (dBZ)','FontSize',11,'FontWeight','bold');
 
-    % Plot convectivity
-    s2=subplot(4,1,2);
+    % Plot velocity
+    s2=subplot(5,1,2);
 
     hold on
-    surf(data.time,data.asl./1000,convDBZ,'edgecolor','none');
+    surf(data.time,data.asl./1000,data.VEL,'edgecolor','none');
+    view(2);
+    ylabel('Altitude (km)');
+    clim([-12 12]);
+    ylim([0 ylimUpper]);
+    xlim([data.time(1),data.time(end)]);
+    set(gca,'XTickLabel',[]);
+    s2.Colormap=flipud(velCols);
+    cb2=colorbar;
+    grid on
+    box on
+
+    title('(b) Velocity (m s^{-1})','FontSize',11,'FontWeight','bold');
+
+    % Plot convectivity
+    s3=subplot(5,1,3);
+
+    hold on
+    surf(data.time,data.asl./1000,convectivity,'edgecolor','none');
     view(2);
     ylabel('Altitude (km)');
     clim([0 1]);
@@ -223,7 +265,7 @@ for aa=1:length(caseStart)
     set(gca,'XTickLabel',[]);
     grid on
     box on
-    text(textDate,textAlt,'(b) Convectivity','FontSize',11,'FontWeight','bold');
+    title('(c) Convectivity','FontSize',11,'FontWeight','bold');
 
     % Plot the 1D classification at the very bottom (needs to be done
     % before the last plot for matlab specific reasons)
@@ -239,7 +281,7 @@ for aa=1:length(caseStart)
     box on
 
     % Plot classification
-    s4=subplot(4,1,3);
+    s4=subplot(5,1,4);
 
     hold on
     surf(data.time,data.asl./1000,classSubPlot,'edgecolor','none');
@@ -257,21 +299,20 @@ for aa=1:length(caseStart)
     set(gca,'XTickLabel',[]);
     grid on
     box on
-    text(textDate,textAlt,'(c) Echo type','FontSize',11,'FontWeight','bold');
+    title('(d) Echo type','FontSize',11,'FontWeight','bold');
 
     % Matlab by default creates a lot of white space so we reposition the
     % panels to avoid that
-    s1.Position=[0.049 0.69 0.82 0.29];
-    s2.Position=[0.049 0.38 0.82 0.29];
-    s4.Position=[0.049 0.07 0.82 0.29];
-    s5.Position=[0.049 0.035 0.82 0.02];
-
-    % The color bars also need to be repositioned
-    cb1.Position=[0.875,0.69,0.02,0.29];
-    cb2.Position=[0.875,0.38,0.02,0.29];
-    cb4.Position=[0.875,0.07,0.02,0.29];
+    xp=0.041;
+    ht=0.21;
+    wi=0.87;
+    s1.Position=[xp 0.77 wi ht];
+    s2.Position=[xp 0.535 wi ht];
+    s3.Position=[xp 0.3 wi ht];
+    s4.Position=[xp 0.065 wi ht];
+    s5.Position=[xp 0.03 wi 0.02];
 
     % Save the figure based on the start and end time
     set(gcf,'PaperPositionMode','auto')
-    print(f1,[figdir,'apr3_',datestr(data.time(1),'yyyymmdd_HHMMSS'),'_to_',datestr(data.time(end),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
+    print(f1,[figdir,'cloudnet_',datestr(data.time(1),'yyyymmdd_HHMMSS'),'_to_',datestr(data.time(end),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
 end
