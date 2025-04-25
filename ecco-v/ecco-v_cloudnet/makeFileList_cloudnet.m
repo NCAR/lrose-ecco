@@ -1,4 +1,4 @@
-function [fileList] = makeFileList_cloudnet(indir,startTime,endTime,fileFormat,subdir)
+function [fileList] = makeFileList_cloudnet(indir,startTime,endTime,fileFormat)
 %Make list with files within time range based on the start time of the
 %files
 % indir: directory where the files are located (see also subdir)
@@ -37,38 +37,21 @@ ssDig=strfind(fileFormat,'s');
 startDate=datetime(year(startTime),month(startTime),day(startTime),0,0,0);
 endDate=datetime(year(endTime),month(endTime),day(endTime),0,0,0);
 
-if subdir
-    subdirs=dir(indir);
-    subnames={subdirs(:,:).name};
-    rangeDirs=[];
-    for ii=1:length(subnames);
-        if subnames{ii}(1)=='2'
-            dirDate=datetime(str2num(subnames{ii}(1:4)),str2num(subnames{ii}(5:6)),...
-                str2num(subnames{ii}(7:8)),0,0,0);
-            if dirDate>=startDate & dirDate<=endDate
-                rangeDirs=cat(1,rangeDirs,subnames{ii});
-            end
-        end
-    end
-    
-    allFileList=[];
-    for jj=1:size(rangeDirs,1)
-        subFileList=dir([indir,rangeDirs(jj,:),'/*.nc']);
-        allFileList=cat(1,allFileList,subFileList);
-    end
-else
-    allFileList=dir([indir,'*.nc']);
-    if isempty(allFileList)
-        allFileList=dir([indir,'*.iwrf_ts']);
-    end
+allFileList=dir([indir,'*.nc']);
+if isempty(allFileList)
+    allFileList=dir([indir,'*.iwrf_ts']);
 end
 
 fileList={};
 if ~isempty(allFileList)
     filenames={allFileList(:,:).name};
-
     for ii=1:length(filenames)
-        fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
+        fileYear=strcat(century,filenames{ii}(YYDig(1):YYDig(2)));
+        fileStart=datetime(str2num(fileYear),str2num(filenames{ii}(MMDig(1):MMDig(2))),...
+            str2num(filenames{ii}(DDDig(1):DDDig(2))),0,0,0);
+        if fileStart>=startDate & fileStart<endDate
+            fileList{end+1}=[allFileList(ii).folder,'/',allFileList(ii).name];
+        end
     end
 end
 

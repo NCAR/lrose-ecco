@@ -11,25 +11,31 @@ addpath(genpath('../ecco-v_functions/'));
 
 %% Input variables
 
+instance='leipzig'; % leipzig or puntaArenas
+
+% Save output data
+saveData=1;
+outdir=['/scr/virga1/rsfdata/projects/cloudnet/matFiles/',instance,'/'];
+
 % Directory path to Cloudnet data. The data needs to be organized into
 % subdirectories by date in the format yyyymmdd (20220906). The dataDir
 % below needs to point to the parent directory of those subdirectories.
-dataDir='/scr/virga1/rsfdata/projects/cloudnet/';
+dataDir=['/scr/virga1/rsfdata/projects/cloudnet/',instance,'/'];
 
 % Directory for output figures
-figdir='/scr/virga1/rsfdata/projects/cloudnet/ecco-v-Figs/';
+figdir=['/scr/virga1/rsfdata/projects/cloudnet/ecco-v-Figs/',instance,'/'];
 
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='on';
+showPlot='off';
 
 % casefile is a text file with start and end times of the data to process.
 % The format is yyyy mm dd HH MM for the start time followed by yyyy mm dd
 % HH MM of the end time. (E.g. 2022 09 06 16 21 2022 09 06 16 29)
 % Each case needs to be in a separate line. The file needs to end with a newline for
 % matlab to read it properly. Use space as a separator.
-casefile='eccoCases_cloudnet.txt';
+casefile=['eccoCases_cloudnet_',instance,'.txt'];
 
 %% Tuning parameters
 
@@ -90,7 +96,7 @@ for aa=1:length(caseStart)
     % case. Then load the data
 
 
-    fileList=makeFileList_cloudnet(dataDir,startTime,endTime,'20YYMMDD',1);
+    fileList=makeFileList_cloudnet(dataDir,startTime,endTime,'20YYMMDD');
 
     data=[];
     data.Z=[];
@@ -185,11 +191,6 @@ for aa=1:length(caseStart)
     classSubPlot(classSub==36)=8;
     classSubPlot(classSub==38)=9;
 
-    % Set up the 1D classification at the bottom of the plot
-    stratConv1D=max(classSubPlot,[],1);
-    time1D=data.time(~isnan(stratConv1D));
-    stratConv1D=stratConv1D(~isnan(stratConv1D));
-
     % Set up color maps
     colmapSC=[0,0.1,0.6;
         0.38,0.42,0.96;
@@ -201,118 +202,155 @@ for aa=1:length(caseStart)
         0.99,0.77,0.22;
         0.7,0,0];
 
-    col1D=colmapSC(stratConv1D,:);
+    threeDays=startTime:hours(72):endTime;
+    threeDays=cat(2,threeDays,endTime);
 
-    % Determine upper limit of y axis based on where the valid data ends
-    ylimUpper=(max(data.asl(~isnan(data.DBZ)))./1000)+0.5;
-    % Altitude of the labels within the subplots
-    textAlt=ylimUpper-1;
-    % Time of the labels within the subplots
-    textDate=data.time(1)+seconds(5);
+    for kk=1:length(threeDays)-1
 
-    close all
+        timeInds=find(data.time>=threeDays(kk) & data.time<threeDays(kk+1));
+        if isempty(timeInds)
+            continue
+        end
 
-    f1 = figure('Position',[200 500 1600 1200],'DefaultAxesFontSize',12,'visible',showPlot);
+        % Set up the 1D classification at the bottom of the plot
+        stratConv1D=max(classSubPlot(:,timeInds),[],1);
+        timeThis=data.time(:,timeInds);
+        time1D=timeThis(~isnan(stratConv1D));
+        stratConv1D=stratConv1D(~isnan(stratConv1D));
 
-    colormap('jet');
+        col1D=colmapSC(stratConv1D,:);
 
-    % Plot reflectivity
-    s1=subplot(5,1,1);
+        % Determine upper limit of y axis based on where the valid data ends
+        %ylimUpper=(max(data.asl(~isnan(data.DBZ)))./1000)+0.5;
+        ylimUpper=12;
+        % Altitude of the labels within the subplots
+        textAlt=ylimUpper-1;
+       
+        close all
 
-    hold on
-    surf(data.time,data.asl./1000,data.DBZ,'edgecolor','none');
-    view(2);
-    ylabel('Altitude (km)');
-    clim([-30 25]);
-    ylim([0 ylimUpper]);
-    xlim([data.time(1),data.time(end)]);
-    set(gca,'XTickLabel',[]);
-    cb1=colorbar;
-    grid on
-    box on
+        f1 = figure('Position',[200 500 1600 1200],'DefaultAxesFontSize',12,'visible',showPlot);
 
-    title('(a) Reflectivity (dBZ)','FontSize',11,'FontWeight','bold');
+        colormap('jet');
 
-    % Plot velocity
-    s2=subplot(5,1,2);
+        % Plot reflectivity
+        s1=subplot(5,1,1);
 
-    hold on
-    surf(data.time,data.asl./1000,data.VEL,'edgecolor','none');
-    view(2);
-    ylabel('Altitude (km)');
-    clim([-12 12]);
-    ylim([0 ylimUpper]);
-    xlim([data.time(1),data.time(end)]);
-    set(gca,'XTickLabel',[]);
-    s2.Colormap=flipud(velCols);
-    cb2=colorbar;
-    grid on
-    box on
+        hold on
+        surf(data.time(:,timeInds),data.asl(:,timeInds)./1000,data.DBZ(:,timeInds),'edgecolor','none');
+        view(2);
+        ylabel('Altitude (km)');
+        clim([-30 25]);
+        ylim([0 ylimUpper]);
+        xlim([threeDays(kk),threeDays(kk+1)]);
+        set(gca,'XTickLabel',[]);
+        cb1=colorbar;
+        grid on
+        box on
 
-    title('(b) Velocity (m s^{-1})','FontSize',11,'FontWeight','bold');
+        title('(a) Reflectivity (dBZ)','FontSize',11,'FontWeight','bold');
 
-    % Plot convectivity
-    s3=subplot(5,1,3);
+        % Plot velocity
+        s2=subplot(5,1,2);
 
-    hold on
-    surf(data.time,data.asl./1000,convectivity,'edgecolor','none');
-    view(2);
-    ylabel('Altitude (km)');
-    clim([0 1]);
-    ylim([0 ylimUpper]);
-    xlim([data.time(1),data.time(end)]);
-    cb2=colorbar;
-    set(gca,'XTickLabel',[]);
-    grid on
-    box on
-    title('(c) Convectivity','FontSize',11,'FontWeight','bold');
+        hold on
+        surf(data.time(:,timeInds),data.asl(:,timeInds)./1000,data.VEL(:,timeInds),'edgecolor','none');
+        view(2);
+        ylabel('Altitude (km)');
+        clim([-12 12]);
+        ylim([0 ylimUpper]);
+        xlim([threeDays(kk),threeDays(kk+1)]);
+        set(gca,'XTickLabel',[]);
+        s2.Colormap=flipud(velCols);
+        cb2=colorbar;
+        grid on
+        box on
 
-    % Plot the 1D classification at the very bottom (needs to be done
-    % before the last plot for matlab specific reasons)
-    s5=subplot(30,1,30);
+        title('(b) Velocity (m s^{-1})','FontSize',11,'FontWeight','bold');
 
-    hold on
-    scat1=scatter(time1D,ones(size(time1D)),10,col1D,'filled');
-    set(gca,'clim',[0,1]);
-    set(gca,'YTickLabel',[]);
-    s5.Colormap=colmapSC;
-    xlim([data.time(1),data.time(end)]);
-    grid on
-    box on
+        % Plot convectivity
+        s3=subplot(5,1,3);
 
-    % Plot classification
-    s4=subplot(5,1,4);
+        hold on
+        surf(data.time(:,timeInds),data.asl(:,timeInds)./1000,convectivity(:,timeInds),'edgecolor','none');
+        view(2);
+        ylabel('Altitude (km)');
+        clim([0 1]);
+        ylim([0 ylimUpper]);
+        xlim([threeDays(kk),threeDays(kk+1)]);
+        cb2=colorbar;
+        set(gca,'XTickLabel',[]);
+        grid on
+        box on
+        title('(c) Convectivity','FontSize',11,'FontWeight','bold');
 
-    hold on
-    surf(data.time,data.asl./1000,classSubPlot,'edgecolor','none');
-    view(2);
-    ylabel('Altitude (km)');
-    clim([0 10]);
-    ylim([0 ylimUpper]);
-    xlim([data.time(1),data.time(end)]);
-    s4.Colormap=colmapSC;
-    clim([0.5 9.5]);
-    cb4=colorbar;
-    cb4.Ticks=1:9;
-    cb4.TickLabels={'Strat Low','Strat Mid','Strat High','Mixed',...
-        'Conv','Conv Elev','Conv Shallow','Conv Mid','Conv Deep'};
-    set(gca,'XTickLabel',[]);
-    grid on
-    box on
-    title('(d) Echo type','FontSize',11,'FontWeight','bold');
+        % Plot the 1D classification at the very bottom (needs to be done
+        % before the last plot for matlab specific reasons)
+        s5=subplot(30,1,30);
 
-    % Matlab by default creates a lot of white space so we reposition the
-    % panels to avoid that
-    xp=0.041;
-    ht=0.21;
-    wi=0.87;
-    s1.Position=[xp 0.77 wi ht];
-    s2.Position=[xp 0.535 wi ht];
-    s3.Position=[xp 0.3 wi ht];
-    s4.Position=[xp 0.065 wi ht];
-    s5.Position=[xp 0.03 wi 0.02];
+        hold on
+        scat1=scatter(time1D,ones(size(time1D)),10,col1D,'filled');
+        set(gca,'clim',[0,1]);
+        set(gca,'YTickLabel',[]);
+        s5.Colormap=colmapSC;
+        xlim([threeDays(kk),threeDays(kk+1)]);
+        grid on
+        box on
 
-    % Save the figure based on the start and end time
-    set(gcf,'PaperPositionMode','auto')
-    print(f1,[figdir,'cloudnet_',datestr(data.time(1),'yyyymmdd_HHMMSS'),'_to_',datestr(data.time(end),'yyyymmdd_HHMMSS'),'.png'],'-dpng','-r0')
+        % Plot classification
+        s4=subplot(5,1,4);
+
+        hold on
+        surf(data.time(:,timeInds),data.asl(:,timeInds)./1000,classSubPlot(:,timeInds),'edgecolor','none');
+        view(2);
+        ylabel('Altitude (km)');
+        clim([0 10]);
+        ylim([0 ylimUpper]);
+        xlim([threeDays(kk),threeDays(kk+1)]);
+        s4.Colormap=colmapSC;
+        clim([0.5 9.5]);
+        cb4=colorbar;
+        cb4.Ticks=1:9;
+        cb4.TickLabels={'Strat Low','Strat Mid','Strat High','Mixed',...
+            'Conv','Conv Elev','Conv Shallow','Conv Mid','Conv Deep'};
+        set(gca,'XTickLabel',[]);
+        grid on
+        box on
+        title('(d) Echo type','FontSize',11,'FontWeight','bold');
+
+        % Matlab by default creates a lot of white space so we reposition the
+        % panels to avoid that
+        xp=0.041;
+        ht=0.21;
+        wi=0.87;
+        s1.Position=[xp 0.77 wi ht];
+        s2.Position=[xp 0.535 wi ht];
+        s3.Position=[xp 0.3 wi ht];
+        s4.Position=[xp 0.065 wi ht];
+        s5.Position=[xp 0.03 wi 0.02];
+
+        % Save the figure based on the start and end time
+        set(gcf,'PaperPositionMode','auto')
+        print(f1,[figdir,'cloudnet_',datestr(threeDays(kk),'yyyymmdd'),'_to_',datestr(threeDays(kk+1),'yyyymmdd'),'.png'],'-dpng','-r0')
+    end
+    %% Save
+    if saveData
+        disp('Saving stratConv field ...')
+
+        % convectivity=nan(size(data.DBZ));
+        % convectivity(:,nonMissingInds==1)=convectivityShort;
+
+        % convStrat=nan(size(data.DBZ));
+        % convStrat(:,nonMissingInds==1)=classSub;
+        convStrat=classSub;
+        convStrat1D=max(convStrat,[],1);
+
+        save([outdir,instance,'.convectivity.',datestr(startTime,'YYYYmmDD'),'.mat'],'convectivity');
+
+        save([outdir,instance,'.convStrat.',datestr(startTime,'YYYYmmDD'),'.mat'],'convStrat');
+
+        save([outdir,instance,'.convStrat1D.',datestr(startTime,'YYYYmmDD'),'.mat'],'convStrat1D');
+
+        time=data.time;
+        save([outdir,instance,'.time.',datestr(startTime,'YYYYmmDD'),'.mat'],'time');
+    end
 end
