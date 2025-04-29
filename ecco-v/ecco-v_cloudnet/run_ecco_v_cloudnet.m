@@ -11,7 +11,7 @@ addpath(genpath('../ecco-v_functions/'));
 
 %% Input variables
 
-instance='leipzig'; % leipzig or puntaArenas
+instance='puntaArenas'; % leipzig or puntaArenas
 
 % Save output data
 saveData=1;
@@ -81,7 +81,7 @@ caseStart=datetime(caseList.Var1,caseList.Var2,caseList.Var3, ...
 caseEnd=datetime(caseList.Var6,caseList.Var7,caseList.Var8, ...
     caseList.Var9,caseList.Var10,0);
 
-for aa=1:length(caseStart)
+for aa=22:length(caseStart)
 
     disp(['Case ',num2str(aa),' of ',num2str(length(caseStart))]);
 
@@ -202,12 +202,12 @@ for aa=1:length(caseStart)
         0.99,0.77,0.22;
         0.7,0,0];
 
-    threeDays=startTime:hours(72):endTime;
-    threeDays=cat(2,threeDays,endTime);
+    fewDays=startTime:hours(48):endTime;
+    fewDays=cat(2,fewDays,endTime);
 
-    for kk=1:length(threeDays)-1
+    for kk=1:length(fewDays)-1
 
-        timeInds=find(data.time>=threeDays(kk) & data.time<threeDays(kk+1));
+        timeInds=find(data.time>=fewDays(kk) & data.time<fewDays(kk+1));
         if isempty(timeInds)
             continue
         end
@@ -241,7 +241,7 @@ for aa=1:length(caseStart)
         ylabel('Altitude (km)');
         clim([-30 25]);
         ylim([0 ylimUpper]);
-        xlim([threeDays(kk),threeDays(kk+1)]);
+        xlim([fewDays(kk),fewDays(kk+1)]);
         set(gca,'XTickLabel',[]);
         cb1=colorbar;
         grid on
@@ -258,7 +258,7 @@ for aa=1:length(caseStart)
         ylabel('Altitude (km)');
         clim([-12 12]);
         ylim([0 ylimUpper]);
-        xlim([threeDays(kk),threeDays(kk+1)]);
+        xlim([fewDays(kk),fewDays(kk+1)]);
         set(gca,'XTickLabel',[]);
         s2.Colormap=flipud(velCols);
         cb2=colorbar;
@@ -276,7 +276,7 @@ for aa=1:length(caseStart)
         ylabel('Altitude (km)');
         clim([0 1]);
         ylim([0 ylimUpper]);
-        xlim([threeDays(kk),threeDays(kk+1)]);
+        xlim([fewDays(kk),fewDays(kk+1)]);
         cb2=colorbar;
         set(gca,'XTickLabel',[]);
         grid on
@@ -292,7 +292,7 @@ for aa=1:length(caseStart)
         set(gca,'clim',[0,1]);
         set(gca,'YTickLabel',[]);
         s5.Colormap=colmapSC;
-        xlim([threeDays(kk),threeDays(kk+1)]);
+        xlim([fewDays(kk),fewDays(kk+1)]);
         grid on
         box on
 
@@ -305,7 +305,7 @@ for aa=1:length(caseStart)
         ylabel('Altitude (km)');
         clim([0 10]);
         ylim([0 ylimUpper]);
-        xlim([threeDays(kk),threeDays(kk+1)]);
+        xlim([fewDays(kk),fewDays(kk+1)]);
         s4.Colormap=colmapSC;
         clim([0.5 9.5]);
         cb4=colorbar;
@@ -330,7 +330,7 @@ for aa=1:length(caseStart)
 
         % Save the figure based on the start and end time
         set(gcf,'PaperPositionMode','auto')
-        print(f1,[figdir,'cloudnet_',datestr(threeDays(kk),'yyyymmdd'),'_to_',datestr(threeDays(kk+1),'yyyymmdd'),'.png'],'-dpng','-r0')
+        print(f1,[figdir,'cloudnet_',datestr(fewDays(kk),'yyyymmdd'),'_to_',datestr(fewDays(kk+1),'yyyymmdd'),'.png'],'-dpng','-r0')
     end
     %% Save
     if saveData

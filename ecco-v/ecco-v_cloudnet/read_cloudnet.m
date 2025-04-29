@@ -15,8 +15,12 @@ indata.asl=double(repmat(indata.asl,1,length(indata.time)));
 indata.TOPO=ncread(infile,'altitude');
 indata.TOPO=double(repmat(indata.TOPO,1,length(indata.time)));
 
-timeReadM=ncread(infile,'model_time')';
-timeM=startTimeFile+hours(timeReadM);
+try
+    timeReadM=ncread(infile,'model_time')';
+    timeM=startTimeFile+hours(timeReadM);
+catch
+    timeM=indata.time;
+end
 aslM=double(ncread(infile,'model_height'));
 temperature=ncread(infile,'temperature');
 
@@ -64,8 +68,12 @@ for jj=2:length(fileList)
     TOPOt=double(repmat(TOPOt,1,length(timeRead)));
     indata.TOPO=cat(2,indata.TOPO,TOPOt);
 
-    timeReadM=ncread(infile,'model_time')';
-    timeM=startTimeFile+hours(timeReadM);
+    try
+        timeReadM=ncread(infile,'model_time')';
+        timeM=startTimeFile+hours(timeReadM);
+    catch
+        timeM=indata.time;
+    end
     aslM=double(ncread(infile,'model_height'));
     temperature=ncread(infile,'temperature');
 
