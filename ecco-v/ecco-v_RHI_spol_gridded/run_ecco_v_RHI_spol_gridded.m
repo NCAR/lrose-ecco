@@ -25,16 +25,16 @@ outdir='/scr/cirrus3/rsfdata/projects/precip/grids/spol/rhiGriddedMichaelBell/ma
 % Set showPlot below to either 'on' or 'off'. If 'on', the figures will pop up on
 % the screen and also be saved. If 'off', they will be only saved but will
 % not show on the screen while the code runs.
-showPlot='on';
+showPlot='off';
 
-startTime=datetime(2022,5,26,0,0,0);
-endTime=datetime(2022,5,26,0,30,0);
+startTime=datetime(2022,5,27,0,0,0);
+endTime=datetime(2022,5,27,12,30,0);
 
 %% Tuning parameters
 
 % These tuning parameters affect the boundaries between the
 % convective/mixed/stratiform classifications
-pixRadDBZ=79; % Horizontal number of pixels over which reflectivity texture is calculated.
+pixRadDBZ=49; %79 % Horizontal number of pixels over which reflectivity texture is calculated.
 % 3 km: 79; 5 km: 132; 7 km 185
 % Lower values tend to lead to more stratiform precipitation.
 upperLimDBZ=35; % This affects how reflectivity texture translates into convectivity.
@@ -48,8 +48,8 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 
 % These tuning parameter enlarge mixed and convective regions, join them
 % togethre and fill small holes
-enlargeMixed=5; % Enlarges and joins mixed regions
-enlargeConv=5; % Enlarges aned joins convective regions
+enlargeMixed=1; %5 % Enlarges and joins mixed regions
+enlargeConv=1; %5 % Enlarges aned joins convective regions
 
 % Echo below this altitude is removed before processing
 % to limit the effect of ocean clutter
