@@ -16,7 +16,7 @@ def check_ready(rqst_id, wait_interval=300): # Check every 300s=5min
 # Control dict for subsetting. Describes which data is being downloaded.
 control = { 
     'dataset' : 'ds633.0', # Dataset ID from the RDA website
-    'date':'202312010000/to/202312312359', # Start and end date
+    'date':'202405010000/to/202405312359', # Start and end date
     'datetype':'init',
     # Variables. Geopotential height (Z), U wind (U), V wind (V), vertical wind (W)
     # divergence (D), spec hum (Q), rel hum (R), temperature (T).

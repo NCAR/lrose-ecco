@@ -2,8 +2,26 @@
 
 cd ~/git/lrose-ecco/ecco/params
 
-MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2023 10 01 00 00 00"  -end "2023 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202310.log &
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 01 01 00 00 00"  -end "2024 01 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202401.log &
 
-MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2023 11 01 00 00 00"  -end "2023 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202311.log &
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 02 01 00 00 00"  -end "2024 02 29 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202402.log &
 
-MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2023 12 01 00 00 00"  -end "2023 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202312.log &
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 03 01 00 00 00"  -end "2024 03 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202403.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 04 01 00 00 00"  -end "2024 04 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202404.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 05 01 00 00 00"  -end "2024 05 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202405.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 06 01 00 00 00"  -end "2024 06 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202406.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 07 01 00 00 00"  -end "2024 07 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202407.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 08 01 00 00 00"  -end "2024 08 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202408.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 09 01 00 00 00"  -end "2024 09 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202409.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 10 01 00 00 00"  -end "2024 10 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202410.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 11 01 00 00 00"  -end "2024 11 30 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202411.log &
+
+MrmsGribIngest -params MrmsGribIngest.conus3D -debug -start "2024 12 01 00 00 00"  -end "2024 12 31 23 59 59" >& /scr/cirrus2/rsfdata/projects/nexrad-mrms/mdv/logDir/gridMRMS.202412.log &
