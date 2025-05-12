@@ -95,14 +95,14 @@ field_list = {
 #Label    Label       URL           Colorscale Units Cont-lo-hi-interv Format Display_in_menu Bkgnd_Render
 #----------------------------------------------------------------------------------------------------------
 
-RH     RH      /tmp/nexrad-mrms/ERA5/mdv&RH  rh.colors   % -5 80 5 cart 1 0
-TEMP     TEMP      /tmp/nexrad-mrms/ERA5/mdv&TEMP  temp_wrf.colors C -5 80 5 cart 1 0
-U     U      /tmp/nexrad-mrms/ERA5/mdv&U  vel.colors   m/s -5 80 5 cart 1 0
-V     V      /tmp/nexrad-mrms/ERA5/mdv&V  vel.colors   m/s -5 80 5 cart 1 0
-W     W      /tmp/nexrad-mrms/ERA5/mdv&W  vert_wspd.colors   m/s -5 80 5 cart 1 0
-Z     Z      /tmp/nexrad-mrms/ERA5/mdv&Z  geoht_m.colors m2s-2 -5 80 5 cart 1 0
-height     height      /tmp/nexrad-mrms/ERA5/mdv&height  heightkm.colors km -5 80 5 cart 1 0
-pressure     pressure      /tmp/nexrad-mrms/ERA5/mdv&pressure  pressure.colors  hPa -5 80 5 cart 1 0
+RH     RH      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&RH  rh.colors   % -5 80 5 cart 1 0
+TEMP     TEMP      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&TEMP  temp_wrf.colors C -5 80 5 cart 1 0
+U     U      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&U  vel.colors   m/s -5 80 5 cart 1 0
+V     V      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&V  vel.colors   m/s -5 80 5 cart 1 0
+W     W      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&W  vert_wspd.colors   m/s -5 80 5 cart 1 0
+Z     Z      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&Z  geoht_m.colors m2s-2 -5 80 5 cart 1 0
+height     height      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&height  heightkm.colors km -5 80 5 cart 1 0
+pressure     pressure      /scr/cirrus2/rsfdata/projects/nexrad-mrms/ERA5/mdv&pressure  pressure.colors  hPa -5 80 5 cart 1 0
 </GRIDS>
 
 <MAPS>
