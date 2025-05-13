@@ -34,10 +34,10 @@ endTime=datetime(2022,5,27,12,30,0);
 
 % These tuning parameters affect the boundaries between the
 % convective/mixed/stratiform classifications
-pixRadDBZ=29; %79 % Horizontal number of pixels over which reflectivity texture is calculated.
+pixRadDBZ=19; %79 % Horizontal number of pixels/2 over which reflectivity texture is calculated.
 % 3 km: 79; 5 km: 132; 7 km 185
 % Lower values tend to lead to more stratiform precipitation.
-upperLimDBZ=39; %35 % This affects how reflectivity texture translates into convectivity.
+upperLimDBZ=29; %35 % This affects how reflectivity texture translates into convectivity.
 % Higher values lead to more stratiform precipitation.
 stratMixed=0.4; % Convectivity boundary between strat and mixed.
 mixedConv=0.5; % Convectivity boundary between mixed and conv.
@@ -48,12 +48,12 @@ dbzBase=0; % Reflectivity base value which is subtracted from DBZ.
 
 % These tuning parameter enlarge mixed and convective regions, join them
 % togethre and fill small holes
-enlargeMixed=1; %5 % Enlarges and joins mixed regions
-enlargeConv=1; %5 % Enlarges aned joins convective regions
+enlargeMixed=5; %5 % Enlarges and joins mixed regions
+enlargeConv=3; %5 % Enlarges aned joins convective regions
 
 % Echo below this altitude is removed before processing
 % to limit the effect of ocean clutter
-surfAltLim=100; % ASL in m
+surfAltLim=200; % ASL in m
 
 %% Loop through the files
 fileList=makeFileList_spol(dataDir,startTime,endTime,'xxxxxxxxxxxx20YYMMDDxhhmm',1);
@@ -93,9 +93,6 @@ for aa=1:length(fileList)
 
         % Remove surface echo below a certain altitude
         data.DBZ_F(data.Z.*1000<surfAltLim)=nan;
-
-        % Fill in missing values to avoid edge effects
-        DBZfilled=fillmissing(data.DBZ_F,'nearest');
                        
         % % Remove specles
         % maskSub=~isnan(data.DBZ);
@@ -108,13 +105,19 @@ for aa=1:length(fileList)
         data.MELTING_LAYER(data.TEMP_FOR_PID<=0)=20;
         data.MELTING_LAYER(data.TEMP_FOR_PID>0)=10;
 
-        data.TOPO=0;
+        % Take earth curvature into account
+        pseudoRad=earthRadius*4/3/1000;
+        elAng=0;
 
+        term1=data.R(1,:).^2+pseudoRad^2;
+        term2=data.R(1,:).*pseudoRad.*sind(elAng);
+        data.TOPO=(-pseudoRad+sqrt(term1+term2)).*1000;
+        
         %% Texture from reflectivity
 
         disp('Calculating reflectivity texture ...');
 
-        dbzText=f_reflTexture(DBZfilled,pixRadDBZ,dbzBase);
+        dbzText=f_reflTexture(data.DBZ_F,pixRadDBZ,dbzBase);
         dbzText(isnan(data.DBZ_F))=nan;
 
         %% Convectivity
