@@ -40,7 +40,7 @@ debug = DEBUG_OFF;
 //
 // Type: string
 
-instance = "mrms";
+instance = "ecco.conus";
 
 //======================================================================
 //
@@ -74,7 +74,7 @@ instance = "mrms";
 //     RETRACK
 //     FORECAST
 
-mode = REALTIME;
+mode = ARCHIVE;
 
 //======================================================================
 //
@@ -148,7 +148,7 @@ restart_overlap_period = 7200;
 //
 // Type: string
 
-input_url = "$(HOME)/data/convstrat/mdv/mrms_3d";
+input_url = "/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_conus_terrain";
 
 ///////////// max_realtime_valid_age //////////////////
 //
@@ -198,7 +198,7 @@ input_search_sleep_msecs = 1000;
 //
 
 dbz_field = {
-    name = "DBZ",
+    name = "Dbz3D",
     num = 0
 };
 
@@ -307,7 +307,7 @@ vel_to_m_per_sec_scale = 1;
 //
 // Type: boolean
 
-remap_z_to_constant_grid = FALSE;
+remap_z_to_constant_grid = TRUE;
 
 ///////////// remap_z_grid ////////////////////////////
 //
@@ -342,7 +342,7 @@ remap_z_grid = {
 //
 // Type: double
 
-low_dbz_threshold = 35;
+low_dbz_threshold = 30;
 
 ///////////// high_dbz_threshold //////////////////////
 //
@@ -431,7 +431,7 @@ tops_dbz_threshold = 18;
 //
 // Type: boolean
 
-apply_convectivity_threshold = FALSE;
+apply_convectivity_threshold = TRUE;
 
 ///////////// convectivity_field_name /////////////////
 //
@@ -452,7 +452,7 @@ convectivity_field_name = "Convectivity3D";
 //
 // Type: double
 
-low_convectivity_threshold = 0.5;
+low_convectivity_threshold = 0.4;
 
 ///////////// high_convectivity_threshold /////////////
 //
@@ -736,7 +736,7 @@ use_dual_threshold = TRUE;
 //
 
 dual_threshold = {
-    dbz_threshold = 35,
+    dbz_threshold = 45,
     min_fraction_all_parts = 0.5,
     min_fraction_each_part = 0.05,
     min_area_each_part = 20
@@ -802,7 +802,7 @@ top_threshold = 30;
 //
 // Type: double
 
-min_storm_size = 200;
+min_storm_size = 180;
 
 ///////////// max_storm_size //////////////////////////
 //
@@ -1006,7 +1006,7 @@ precip_max_ht = 5;
 //
 // Type: double
 
-precip_plane_ht = 2;
+precip_plane_ht = 3;
 
 //======================================================================
 //
@@ -1381,7 +1381,7 @@ FOKR_cat4_zmax_thresh = 65;
 //
 // Type: string
 
-storm_data_dir = "$(HOME)/data/convstrat/titan/storms/mrms_3d";
+storm_data_dir = "/scr/cirrus3/rsfdata/projects/nexrad-mrms/ecco_titan";
 
 ///////////// store_storm_runs ////////////////////////
 //
@@ -1943,7 +1943,7 @@ override_early_storm_motion_using_field_tracker = FALSE;
 //
 // Type: string
 
-field_tracker_url = "$(HOME)/data/convstrat/optflow/mrms";
+field_tracker_url = "mdvp:://localhost::mdv/optical_flow";
 
 ///////////// field_tracker_U_motion_name /////////////
 //
@@ -2028,5 +2028,5 @@ field_tracker_initial_period_secs = 900;
 //
 // Type: int
 
-field_tracker_transition_period_secs = 1800;
+field_tracker_transition_period_secs = 900;
 
