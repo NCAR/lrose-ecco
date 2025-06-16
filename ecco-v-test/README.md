@@ -16,4 +16,10 @@ Matlab test
 How to run
 
 
+>> addpath('~/git/lrose-ecco/ecco-v-test');
+>> testCase = velTexture_test; 
+>> addpath('~/git/lrose-ecco/ecco-v/ecco-v_functions');
+results = testCase.run
+
+
 
