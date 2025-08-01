@@ -2,7 +2,8 @@
 
 cd ~/git/lrose-ecco/ecco/params
 
-set paramsFile=~/git/lrose-ecco/ecco/params/Titan.ecco.conus
+#set paramsFile=~/git/lrose-ecco/ecco/params/Titan.ecco.conus
+set paramsFile=~/git/lrose-ecco/ecco/params/Titan.mrms.conus
 set logDir=/scr/cirrus3/rsfdata/projects/nexrad-mrms/logs
 
 Titan -params $paramsFile -debug -start "2021 01 01 00 00 00" -end "2021 02 01 00 00 00" >& $logDir/Titan.202101.log &
