@@ -1,0 +1,61 @@
+#! /bin/csh
+
+cd ~/git/lrose-ecco/ecco/params
+
+set paramsFile=~/git/lrose-ecco/ecco/params/Titan.dbz_conus
+set logDir=/scr/cirrus3/rsfdata/projects/nexrad-mrms/logs
+
+Titan -params $paramsFile -debug -start "2021 01 01 00 00 00" -end "2021 02 01 00 00 00" >& $logDir/Titan.dbz_conus.202101.log &
+Titan -params $paramsFile -debug -start "2021 02 01 00 00 00" -end "2021 03 01 00 00 00" >& $logDir/Titan.dbz_conus.202102.log &
+Titan -params $paramsFile -debug -start "2021 03 01 00 00 00" -end "2021 04 01 00 00 00" >& $logDir/Titan.dbz_conus.202103.log &
+Titan -params $paramsFile -debug -start "2021 04 01 00 00 00" -end "2021 05 01 00 00 00" >& $logDir/Titan.dbz_conus.202104.log &
+Titan -params $paramsFile -debug -start "2021 05 01 00 00 00" -end "2021 06 01 00 00 00" >& $logDir/Titan.dbz_conus.202105.log &
+Titan -params $paramsFile -debug -start "2021 06 01 00 00 00" -end "2021 07 01 00 00 00" >& $logDir/Titan.dbz_conus.202106.log &
+Titan -params $paramsFile -debug -start "2021 07 01 00 00 00" -end "2021 08 01 00 00 00" >& $logDir/Titan.dbz_conus.202107.log &
+Titan -params $paramsFile -debug -start "2021 08 01 00 00 00" -end "2021 09 01 00 00 00" >& $logDir/Titan.dbz_conus.202108.log &
+Titan -params $paramsFile -debug -start "2021 09 01 00 00 00" -end "2021 10 01 00 00 00" >& $logDir/Titan.dbz_conus.202109.log &
+Titan -params $paramsFile -debug -start "2021 10 01 00 00 00" -end "2021 11 01 00 00 00" >& $logDir/Titan.dbz_conus.202110.log &
+Titan -params $paramsFile -debug -start "2021 11 01 00 00 00" -end "2021 12 01 00 00 00" >& $logDir/Titan.dbz_conus.202111.log &
+Titan -params $paramsFile -debug -start "2021 12 01 00 00 00" -end "2022 01 01 00 00 00" >& $logDir/Titan.dbz_conus.202112.log &
+
+Titan -params $paramsFile -debug -start "2022 01 01 00 00 00" -end "2022 02 01 00 00 00" >& $logDir/Titan.dbz_conus.202201.log &
+Titan -params $paramsFile -debug -start "2022 02 01 00 00 00" -end "2022 03 01 00 00 00" >& $logDir/Titan.dbz_conus.202202.log &
+Titan -params $paramsFile -debug -start "2022 03 01 00 00 00" -end "2022 04 01 00 00 00" >& $logDir/Titan.dbz_conus.202203.log &
+Titan -params $paramsFile -debug -start "2022 04 01 00 00 00" -end "2022 05 01 00 00 00" >& $logDir/Titan.dbz_conus.202204.log &
+Titan -params $paramsFile -debug -start "2022 05 01 00 00 00" -end "2022 06 01 00 00 00" >& $logDir/Titan.dbz_conus.202205.log &
+Titan -params $paramsFile -debug -start "2022 06 01 00 00 00" -end "2022 07 01 00 00 00" >& $logDir/Titan.dbz_conus.202206.log &
+Titan -params $paramsFile -debug -start "2022 07 01 00 00 00" -end "2022 08 01 00 00 00" >& $logDir/Titan.dbz_conus.202207.log &
+Titan -params $paramsFile -debug -start "2022 08 01 00 00 00" -end "2022 09 01 00 00 00" >& $logDir/Titan.dbz_conus.202208.log &
+Titan -params $paramsFile -debug -start "2022 09 01 00 00 00" -end "2022 10 01 00 00 00" >& $logDir/Titan.dbz_conus.202209.log &
+Titan -params $paramsFile -debug -start "2022 10 01 00 00 00" -end "2022 11 01 00 00 00" >& $logDir/Titan.dbz_conus.202210.log &
+Titan -params $paramsFile -debug -start "2022 11 01 00 00 00" -end "2022 12 01 00 00 00" >& $logDir/Titan.dbz_conus.202211.log &
+Titan -params $paramsFile -debug -start "2022 12 01 00 00 00" -end "2023 01 01 00 00 00" >& $logDir/Titan.dbz_conus.202212.log &
+
+Titan -params $paramsFile -debug -start "2023 01 01 00 00 00" -end "2023 02 01 00 00 00" >& $logDir/Titan.dbz_conus.202301.log &
+Titan -params $paramsFile -debug -start "2023 02 01 00 00 00" -end "2023 03 01 00 00 00" >& $logDir/Titan.dbz_conus.202302.log &
+Titan -params $paramsFile -debug -start "2023 03 01 00 00 00" -end "2023 04 01 00 00 00" >& $logDir/Titan.dbz_conus.202303.log &
+Titan -params $paramsFile -debug -start "2023 04 01 00 00 00" -end "2023 05 01 00 00 00" >& $logDir/Titan.dbz_conus.202304.log &
+Titan -params $paramsFile -debug -start "2023 05 01 00 00 00" -end "2023 06 01 00 00 00" >& $logDir/Titan.dbz_conus.202305.log &
+Titan -params $paramsFile -debug -start "2023 06 01 00 00 00" -end "2023 07 01 00 00 00" >& $logDir/Titan.dbz_conus.202306.log &
+Titan -params $paramsFile -debug -start "2023 07 01 00 00 00" -end "2023 08 01 00 00 00" >& $logDir/Titan.dbz_conus.202307.log &
+Titan -params $paramsFile -debug -start "2023 08 01 00 00 00" -end "2023 09 01 00 00 00" >& $logDir/Titan.dbz_conus.202308.log &
+Titan -params $paramsFile -debug -start "2023 09 01 00 00 00" -end "2023 10 01 00 00 00" >& $logDir/Titan.dbz_conus.202309.log &
+Titan -params $paramsFile -debug -start "2023 10 01 00 00 00" -end "2023 11 01 00 00 00" >& $logDir/Titan.dbz_conus.202310.log &
+Titan -params $paramsFile -debug -start "2023 11 01 00 00 00" -end "2023 12 01 00 00 00" >& $logDir/Titan.dbz_conus.202311.log &
+Titan -params $paramsFile -debug -start "2023 12 01 00 00 00" -end "2024 01 01 00 00 00" >& $logDir/Titan.dbz_conus.202312.log &
+
+Titan -params $paramsFile -debug -start "2024 01 01 00 00 00" -end "2024 02 01 00 00 00" >& $logDir/Titan.dbz_conus.202401.log &
+Titan -params $paramsFile -debug -start "2024 02 01 00 00 00" -end "2024 03 01 00 00 00" >& $logDir/Titan.dbz_conus.202402.log &
+Titan -params $paramsFile -debug -start "2024 03 01 00 00 00" -end "2024 04 01 00 00 00" >& $logDir/Titan.dbz_conus.202403.log &
+Titan -params $paramsFile -debug -start "2024 04 01 00 00 00" -end "2024 05 01 00 00 00" >& $logDir/Titan.dbz_conus.202404.log &
+Titan -params $paramsFile -debug -start "2024 05 01 00 00 00" -end "2024 06 01 00 00 00" >& $logDir/Titan.dbz_conus.202405.log &
+Titan -params $paramsFile -debug -start "2024 06 01 00 00 00" -end "2024 07 01 00 00 00" >& $logDir/Titan.dbz_conus.202406.log &
+Titan -params $paramsFile -debug -start "2024 07 01 00 00 00" -end "2024 08 01 00 00 00" >& $logDir/Titan.dbz_conus.202407.log &
+Titan -params $paramsFile -debug -start "2024 08 01 00 00 00" -end "2024 09 01 00 00 00" >& $logDir/Titan.dbz_conus.202408.log &
+Titan -params $paramsFile -debug -start "2024 09 01 00 00 00" -end "2024 10 01 00 00 00" >& $logDir/Titan.dbz_conus.202409.log &
+Titan -params $paramsFile -debug -start "2024 10 01 00 00 00" -end "2024 11 01 00 00 00" >& $logDir/Titan.dbz_conus.202410.log &
+Titan -params $paramsFile -debug -start "2024 11 01 00 00 00" -end "2024 12 01 00 00 00" >& $logDir/Titan.dbz_conus.202411.log &
+Titan -params $paramsFile -debug -start "2024 12 01 00 00 00" -end "2025 01 01 00 00 00" >& $logDir/Titan.dbz_conus.202412.log &
+
+
+

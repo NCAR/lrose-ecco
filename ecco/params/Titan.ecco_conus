@@ -40,7 +40,7 @@ debug = DEBUG_OFF;
 //
 // Type: string
 
-instance = "mrms.conus";
+instance = "ecco_conus";
 
 //======================================================================
 //
@@ -342,7 +342,7 @@ remap_z_grid = {
 //
 // Type: double
 
-low_dbz_threshold = 35;
+low_dbz_threshold = 30;
 
 ///////////// high_dbz_threshold //////////////////////
 //
@@ -431,7 +431,7 @@ tops_dbz_threshold = 18;
 //
 // Type: boolean
 
-apply_convectivity_threshold = FALSE;
+apply_convectivity_threshold = TRUE;
 
 ///////////// convectivity_field_name /////////////////
 //
@@ -1381,7 +1381,7 @@ FOKR_cat4_zmax_thresh = 65;
 //
 // Type: string
 
-storm_data_dir = "/scr/cirrus3/rsfdata/projects/nexrad-mrms/dbz_titan";
+storm_data_dir = "/scr/cirrus3/rsfdata/projects/nexrad-mrms/titan/ecco_conus";
 
 ///////////// store_storm_runs ////////////////////////
 //
