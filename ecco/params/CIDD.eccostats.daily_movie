@@ -108,92 +108,28 @@ MixedFracHourly MixedFracHourly $(DATA_DIR)&MixedFracHourly frac_ecco.colors  co
 ConvFracHourly ConvFracHourly $(DATA_DIR)&ConvFracHourly frac_ecco.colors  count -5 80 5 cont 1 0
 ConvShallowFracHourly ConvShallowFracHourly $(DATA_DIR)&ConvShallowFracHourly frac_ecco.colors  count -5 80 5 cont 1 0
 ConvMidFracHourly ConvMidFracHourly $(DATA_DIR)&ConvMidFracHourly frac_ecco.colors  count -5 80 5 cont 1 0
-ConvDeepFracHourly ConvDeepFracHourly $(DATA_DIR)&ConvDeepFracHourly frac_ecco.colors  count -5 80 5 cont 1 0
-ConvElevFracHourly ConvElevFracHourly $(DATA_DIR)&ConvElevFracHourly frac_ecco.colors  count -5 80 5 cont 1 0
+ConvDeepFracHourly ConvDeepFracHourly $(DATA_DIR)&ConvDeepFracHourly frac_conv_deep.colors  count -5 80 5 cont 1 0
+ConvElevFracHourly ConvElevFracHourly $(DATA_DIR)&ConvElevFracHourly frac_conv_deep.colors  count -5 80 5 cont 1 0
 
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-
-# frac fields 
-
-StratLowFrac StratLowFrac $(DATA_DIR)&StratLowFrac frac_ecco.colors  count -5 80 5 cont 1 0
-StratMidFrac StratMidFrac $(DATA_DIR)&StratMidFrac frac_ecco.colors  count -5 80 5 cont 1 0
-StratHighFrac StratHighFrac $(DATA_DIR)&StratHighFrac frac_ecco.colors  count -5 80 5 cont 1 0
-MixedFrac MixedFrac $(DATA_DIR)&MixedFrac frac_ecco.colors  count -5 80 5 cont 1 0
-
-ConvShallowFrac ConvShallowFrac $(DATA_DIR)&ConvShallowFrac frac_ecco.colors  count -5 80 5 cont 1 0
-ConvMidFrac ConvMidFrac $(DATA_DIR)&ConvMidFrac frac_ecco.colors  count -5 80 5 cont 1 0
-ConvDeepFrac ConvDeepFrac $(DATA_DIR)&ConvDeepFrac frac_ecco.colors  count -5 80 5 cont 1 0
-ConvElevFrac ConvElevFrac $(DATA_DIR)&ConvElevFrac frac_ecco.colors  count -5 80 5 cont 1 0
-
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-    ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 
-# mean fields 
+# man fields Hourly
 
-StratLowConvMean StratLowConvMean $(DATA_DIR)&StratLowConvMean convectivity.colors  - -5 80 5 cont 1 0
-StratMidConvMean StratMidConvMean $(DATA_DIR)&StratMidConvMean convectivity.colors  - -5 80 5 cont 1 0
-StratHighConvMean StratHighConvMean $(DATA_DIR)&StratHighConvMean convectivity.colors  - -5 80 5 cont 1 0
-MixedConvMean MixedConvMean $(DATA_DIR)&MixedConvMean convectivity.colors  - -5 80 5 cont 1 0
+StratLowMeanConvHourly StratLowMeanConvHourly $(DATA_DIR)&StratLowMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+StratMidMeanConvHourly StratMidMeanConvHourly $(DATA_DIR)&StratMidMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+StratHighMeanConvHourly StratHighMeanConvHourly $(DATA_DIR)&StratHighMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+MixedMeanConvHourly MixedMeanConvHourly $(DATA_DIR)&MixedMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
 
-ConvShallowConvMean ConvShallowConvMean $(DATA_DIR)&ConvShallowConvMean convectivity.colors  - -5 80 5 cont 1 0
-ConvMidConvMean ConvMidConvMean $(DATA_DIR)&ConvMidConvMean convectivity.colors  - -5 80 5 cont 1 0
-ConvDeepConvMean ConvDeepConvMean $(DATA_DIR)&ConvDeepConvMean convectivity.colors  - -5 80 5 cont 1 0
-ConvElevConvMean ConvElevConvMean $(DATA_DIR)&ConvElevConvMean convectivity.colors  - -5 80 5 cont 1 0
-
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-
-# counts
-
-StratLowCount StratLowCount $(DATA_DIR)&StratLowCount number.colors  count -5 80 5 cont 1 0
-StratMidCount StratMidCount $(DATA_DIR)&StratMidCount number.colors  count -5 80 5 cont 1 0
-StratHighCount StratHighCount $(DATA_DIR)&StratHighCount number.colors  count -5 80 5 cont 1 0
-MixedCount MixedCount $(DATA_DIR)&MixedCount number.colors  count -5 80 5 cont 1 0
-
-ConvShallowCount ConvShallowCount $(DATA_DIR)&ConvShallowCount number.colors  count -5 80 5 cont 1 0
-ConvMidCount ConvMidCount $(DATA_DIR)&ConvMidCount number.colors  count -5 80 5 cont 1 0
-ConvDeepCount ConvDeepCount $(DATA_DIR)&ConvDeepCount number.colors  count -5 80 5 cont 1 0
-ConvElevCount ConvElevCount $(DATA_DIR)&ConvElevCount number.colors  count -5 80 5 cont 1 0
+ConvShallowMeanConvHourly ConvShallowMeanConvHourly $(DATA_DIR)&ConvShallowMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+ConvMidMeanConvHourly ConvMidMeanConvHourly $(DATA_DIR)&ConvMidMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+ConvDeepMeanConvHourly ConvDeepMeanConvHourly $(DATA_DIR)&ConvDeepMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
+ConvElevMeanConvHourly ConvElevMeanConvHourly $(DATA_DIR)&ConvElevMeanConvHourly frac_ecco.colors  - -5 80 5 cont 1 0
 
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-
-# conv sum
-
-StratLowConvSum StratLowConvSum $(DATA_DIR)&StratLowConvSum convectivity.colors  - -5 80 5 cont 1 0
-StratMidConvSum StratMidConvSum $(DATA_DIR)&StratMidConvSum convectivity.colors  - -5 80 5 cont 1 0
-StratHighConvSum StratHighConvSum $(DATA_DIR)&StratHighConvSum convectivity.colors  - -5 80 5 cont 1 0
-MixedConvSum MixedConvSum $(DATA_DIR)&MixedConvSum convectivity.colors  - -5 80 5 cont 1 0
-
-ConvShallowConvSum ConvShallowConvSum $(DATA_DIR)&ConvShallowConvSum convectivity.colors  - -5 80 5 cont 1 0
-ConvMidConvSum ConvMidConvSum $(DATA_DIR)&ConvMidConvSum convectivity.colors  - -5 80 5 cont 1 0
-ConvDeepConvSum ConvDeepConvSum $(DATA_DIR)&ConvDeepConvSum convectivity.colors  - -5 80 5 cont 1 0
-ConvElevConvSum ConvElevConvSum $(DATA_DIR)&ConvElevConvSum convectivity.colors  - -5 80 5 cont 1 0
-
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-
-TotalCount  TotalCount  $(DATA_DIR)&TotalCount number.colors  count -5 80 5 cont 1 0
-ValidCount  ValidCount  $(DATA_DIR)&ValidCount number.colors  count -5 80 5 cont 1 0
-TerrainHt   TerrainHt   $(DATA_DIR)&TerrainHt  terrain.colors m -5 80 5 cont 1 0
-WaterFlag   WaterFlag   $(DATA_DIR)&WaterFlag  water_flag.colors m -5 80 5 cont 1 0
-
-TotalCountComp  TotalCountComp  $(DATA_DIR)&TotalCount number50k.colors  count -5 80 5 cont,comp 1 0
-ValidCountComp  ValidCountComp  $(DATA_DIR)&ValidCount number40k.colors  count -5 80 5 cont,comp 1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
-
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
 ========      =========  /tmp/spacer&junk  none.colors   m   -5   80  5  dcont   1 0
@@ -308,12 +244,12 @@ cidd.movie_frame_dir: /tmp
 
 #  This determines how many movie frames are in the loop to start with
 #  Setting this high will cause the X server to hog memory.
-cidd.starting_movie_frames:  12
+cidd.starting_movie_frames:  24
 
 # minutes per movie frame on startup
 # The display will atomatically update every this interval, throwing away its
 # oldest movie frame and creating and drawing a new one.
-cidd.time_interval:  43200
+cidd.time_interval:  60
 
 # This parameter sets the maximum number of hours in the future a user can select
 # from the quick forecast menu. See SHOW_FORECAST_MENU menu bar button
@@ -999,7 +935,7 @@ cidd.click_posn_rel_to_origin: 1
 # Set this parameter to force the field menu popup to this many columns
 # If set <= 0, then cidd sets this dynamically, allowing at most 30 in each
 # column.
-cidd.num_field_menu_cols: 4
+cidd.num_field_menu_cols: 5
 
 # This parameter sets WSDDM specific behavior On -
 # - Go to end of loop when movie stops.

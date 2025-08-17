@@ -1,0 +1,9 @@
+#! /bin/csh
+
+cd $HOME/git/lrose-ecco/ecco/params
+
+setenv DATA_DIR /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/titan_censor/dbz_conus_hourly
+
+CIDD -p CIDD.eccostats.daily_movie
+
+
