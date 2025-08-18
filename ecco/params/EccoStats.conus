@@ -451,5 +451,5 @@ write_hour_of_day_stats = TRUE;
 //
 // Type: string
 
-hour_of_day_stats_dir = "/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/conus";
+hour_of_day_stats_dir = "/scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/conus_hourly";
 

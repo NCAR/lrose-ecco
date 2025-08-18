@@ -1,0 +1,9 @@
+#! /bin/csh
+
+cd $HOME/git/lrose-ecco/ecco/params
+
+setenv DATA_DIR /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/conus
+setenv DATA_DIR_HOURLY /scr/cirrus2/rsfdata/projects/nexrad-mrms/ecco_stats/conus_hourly
+
+CIDD -p CIDD.eccostats.conus
+
