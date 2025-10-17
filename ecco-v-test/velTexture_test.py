@@ -36,6 +36,21 @@ class Test_velTexture_Methods(unittest.TestCase):
         # self.assertAlmostEqual(velActual, velExpect, decimal, "not equal")
         self.assertTrue(result, "not equal")
 
+    def test_20x20_zero_5_5_nan_15_15(self):
+        VEL = np.ones((20,20))
+        VEL[4,4] = 0
+        VEL[14,14] = np.nan
+        pixRad = 5  # int between 0 and len(VEL) ??
+        velBase = 10   # base value for velocities; this is subtracted from VEL; must have same dimensions as VEL? or not???
+        velActual = f_velTexture.f_velTexture(VEL, pixRad, velBase)
+        print(velActual)
+        velExpect = np.zeros((20,20))
+        velExpect[14,14] = np.nan
+        velExpect[:,19] = np.nan
+        decimal = 1e-5
+        result = np.allclose(velActual, velExpect, decimal, equal_nan = True)
+        # self.assertAlmostEqual(velActual, velExpect, decimal, "not equal")
+        self.assertTrue(result, "not equal")
 
 if __name__ == '__main__':
     unittest.main()
