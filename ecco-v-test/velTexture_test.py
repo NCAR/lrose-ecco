@@ -43,10 +43,11 @@ class Test_velTexture_Methods(unittest.TestCase):
         pixRad = 5  # int between 0 and len(VEL) ??
         velBase = 10   # base value for velocities; this is subtracted from VEL; must have same dimensions as VEL? or not???
         velActual = f_velTexture.f_velTexture(VEL, pixRad, velBase)
+        print("velActual = ")
         print(velActual)
         velExpect = np.zeros((20,20))
         velExpect[14,14] = np.nan
-        velExpect[:,19] = np.nan
+        velExpect[:,19] = np.nan    # <<=== failing here.  Hmmm. Why is the last column not set to nan?
         decimal = 1e-5
         result = np.allclose(velActual, velExpect, decimal, equal_nan = True)
         # self.assertAlmostEqual(velActual, velExpect, decimal, "not equal")
