@@ -40,7 +40,7 @@ def f_velTexture(VEL, pixRad, velBase):
     # strel_list = [[1 if ((i-center)*(i-center)+(j-center)*(j-center)) < 25 else 0  for j in range(9)] for i in range(9)]
     # strel_matrix = np.asarray(strel_list)
 
-    kernel = cv.getStructuringElement(cv.MORPH_DIAMOND,(9,9))
+    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(9,9)) # ELLIPSE is closest to Matlab's disk, but it is NOT exactly the same
     structure = kernel
     print("structure")
     print(structure)
