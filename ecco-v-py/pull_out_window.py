@@ -1,5 +1,6 @@
+import numpy as np
 
-def pull_out_window(velPadded, pixRad):
+def pull_out_window(velPadded, pixRad, velText):
 
     # Loop through data points in time direction and pull out right window ???
     # working here 1/14/2026 
@@ -41,11 +42,11 @@ def pull_out_window(velPadded, pixRad):
 
         # velCorr=velBlock-newY
         # velCorrnp = np.array(velCorr)   # convert to np.array if needed
+        velCorr = np.array(velCorr)
         velCorr[velCorr<1]=1     # use boolean indexing on np.array
         # Calculate texture
         # tvel=sqrt(std(velCorr.^2,[],1,'omitnan'))  Matlab version
-        tvel=np.sqrt(np.nanstd(velCorrnp**2,1,ddof=1)) # ddof ==> N-1 for divisor; Means Delta Degrees of Freedom.
+        tvel=np.sqrt(np.nanstd(velCorr**2,1,ddof=1)) # ddof ==> N-1 for divisor; Means Delta Degrees of Freedom.
     
-        velText(:,ii)=tvel
-    end
+        velText[:,ii]=tvel
     return velText
