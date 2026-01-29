@@ -10,6 +10,41 @@ import numpy as np
 # from scipy.ndimage import binary_erosion, label, generate_binary_structure
 # from scipy.spatial import cKDTree
 
+
+def f_structural_element(dim):
+    """
+    Construct a structural element (2D matrix) of fixed size and shape.
+    This mimics the Matlab strel('disk',5) 
+    OpenCV almost works, with MORPH_ELLIPSE ...
+    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(9,9)) # ELLIPSE is closest to Matlab's disk, but it is NOT exactly the same
+
+    Parameters
+    ----------
+    dim : 2D numpy.ndarray
+        Input dimension of 2D array; only one value is accepted, 5
+        
+    Returns
+    -------
+    kernel : 2D numpy.ndarray of uint8
+    """
+
+    if dim != 5:
+        raise Exception('dim', 'must equal 5')
+    else:
+        # THIS WORKS! and equals Matlab results:
+        kernel = np.ones((9,9),np.uint8)
+        # set the corners of the kernel to 0's
+        kernel[8,:2] = 0
+        kernel[8,7:] = 0
+        kernel[7,0] = 0
+        kernel[7,8] = 0
+        kernel[0,:2] = 0
+        kernel[0,7:] = 0
+        kernel[1,0] = 0
+        kernel[1,8] = 0
+        return kernel
+
+
 def f_velTexture(VEL, pixRad, velBase):
     """
     Compute the velocity texture of VEL exactly as in the MATLAB version.
@@ -40,41 +75,52 @@ def f_velTexture(VEL, pixRad, velBase):
     # strel_list = [[1 if ((i-center)*(i-center)+(j-center)*(j-center)) < 25 else 0  for j in range(9)] for i in range(9)]
     # strel_matrix = np.asarray(strel_list)
 
-    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(9,9)) # ELLIPSE is closest to Matlab's disk, but it is NOT exactly the same
-    structure = kernel
-    print("structure")
-    print(structure)
+    # kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(9,9)) # ELLIPSE is closest to Matlab's disk, but it is NOT exactly the same
+    # structure = kernel
+    # print("structure")
+    # print(structure)
 
     # not bad to start, but need to make it more general, not so many magic numbers
     # TODO make a wrapper for this  py_imerode(I,SE)
     # VELsmall = np.zeros(1)
     # VELsmall = binary_erosion(VELmask, structure).astype(np.uint8)
-    VELsmall = cv.erode(VELmask,structure,iterations = 1)
+    # VELsmall = cv.erode(VELmask,structure,iterations = 1)
+    #print("VELsmall: result of binary erosion")
+    #print(VELsmall)
+
+    kernel = f_structural_element(5)
+#**** 
+#THIS WORKS! and equals Matlab results:
+#kernel = np.ones((9,9),np.uint8)
+## set the corners of the kernel to 0's
+ #kernel[8,8] = 0
+ #kernel[8,7] = 0
+ #kernel[7,8] = 0 ...
+    erosion = cv.erode(VELmask,kernel,iterations = 1)
+    VELsmall = erosion
     print("VELsmall: result of binary erosion")
     print(VELsmall)
-
-    # VELsmall = binary_erosion(VELmask, structure=structure, border_value=0).astype(np.uint8)
+# *** 
+    # VELsmall = binary_erosion(VELmask, structure=structure, border_value=0).astype(np.uint8) # this doesn't work
    
-    #print(VELmask)
-    #print(VELsmall)
-    #return VELsmall
-
- 
-    # 3) remove edge outliers
-    VEL_clean = VEL.copy()
-    VEL_clean[(VELmask == 1) & (~VELsmall)] = np.nan
+    # MATLAB: VEL(VELmask==1 & VELsmall==0)=nan;
+    VEL[(VELmask == 1) & (VELsmall == 0)] = np.nan
     print("VEL after and")
-    print(VEL_clean)
-    
-    # 4) prep output
+
+    # Calculate velocity texture 
     nrows, ncols = VEL.shape
     velText = np.full((nrows, ncols), np.nan)
-    
-    # 5) pad columns with nan, then fill missing by linear interp + nearest-end
-    velPadded = np.pad(VEL_clean,
+   
+    # Pad data at start and end
+    # MATLAB: velPadded=padarray(VEL,[0 pixRad],nan); 
+    velPadded = np.pad(VEL,
                        ((0, 0), (pixRad, pixRad)),
                        mode='constant', constant_values=np.nan)
-    
+    # velPadded = np.pad(VEL,((0,0),(pixRad,pixRad)),'constant', constant_values=(np.nan))
+
+    #  *** agrees with Matlab to here ***
+    # Fill in areas with no data
+    # MATLAB: velPadded=fillmissing(velPadded,'linear',2,'EndValues','nearest');    
     def _fill_line(row):
         x = np.arange(len(row))
         valid = np.isfinite(row)
@@ -88,37 +134,87 @@ def f_velTexture(VEL, pixRad, velBase):
     
     velPadded = np.apply_along_axis(_fill_line, axis=1, arr=velPadded)
     
-    # 6) subtract base
+    # Adjust velocity with base value
     velPadded = velPadded - velBase
+    # *** agrees with Matlab to here *** velPadded(py) == velPadded(Matlab)
+
+# 1/27/2026 maybe this section is ok ...
+# written to pull_out_window.py ------ 
+    # Loop through data points in time direction and pull out right window ???
+    # working here 1/14/2026 
+    secondDim = np.size(velPadded[1])
+    for ii in range(secondDim-pixRad*2-1):
+        print("ii: ", ii)
+        velBlock=velPadded(:,ii:ii+pixRad*2);
+        print("velBlock: ", velBlock)
     
-    # 7) sliding-window detrend + texture
-    W = 2*pixRad + 1
-    for ii in range(ncols - 1):  # MATLAB did 1:(ncols-1)
-        block = velPadded[:, ii:ii+W]              # (nrows x W)
-        X = np.tile(np.arange(W), (nrows, 1))      # column positions
-        N = float(W)
-        
-        sumX  = np.nansum(X,   axis=1)
-        sumY  = np.nansum(block, axis=1)
-        sumXY = np.nansum(block*X, axis=1)
-        sumX2 = np.nansum(X**2, axis=1)
-        
-        denom = N*sumX2 - sumX**2
-        a = (sumY*sumX2 - sumX*sumXY) / denom
-        b = (N*sumXY - sumX*sumY) / denom
-        
-        newY = a[:,None] + b[:,None]*X
-        velCorr = block - newY + np.nanmean(block, axis=1)[:,None]
-        velCorr[velCorr < 1] = 1
-        
-        # texture = sqrt(std(velCorr^2))
-        tvel = np.sqrt(np.nanstd(velCorr**2, axis=1))
-        velText[:, ii] = tvel
+        % Calculate and remove slope of reflectivity
+        % Calculate fit
+        x1=1:np.size(velBlock[1]); # second dimension of velBlock
+        X=repmat(x1,size(velBlock,1),1);
     
-    # 8) mask out eroded areas
+        sumX=sum(X,2,'omitnan');
+        sumY=sum(velBlock,2,'omitnan');
+        sumXY=sum((velBlock.*X),2,'omitnan');
+        sumX2=sum(X.^2,2,'omitnan');
+        sumY2=sum(velBlock.^2,2,'omitnan');
+    
+        N=size(velBlock,2);
+    
+        a=(sumY.*sumX2-sumX.*sumXY)./(N.*sumX2-sumX.^2);
+        b=(N.*sumXY-sumX.*sumY)./(N.*sumX2-sumX.^2);
+    
+        newY=a+b.*X;
+    
+        % Remove slope
+        velCorr=velBlock-newY+mean(velBlock,2,'omitnan');
+        %velCorr=velBlock-newY;
+        velCorr(velCorr<1)=1;
+    
+        % Calculate texture
+        tvel=sqrt(std(velCorr.^2,[],2,'omitnan'));
+    
+        velText(:,ii)=tvel;
+    end
+# end pull_out_window.py -----
+
+    # ---- junk from AI ...
+#    W = 2*pixRad + 1
+#    for ii in range(ncols - 1):  # MATLAB did 1:(ncols-1)
+#        block = velPadded[:, ii:ii+W]              # (nrows x W)
+#        X = np.tile(np.arange(W), (nrows, 1))      # column positions
+#        N = float(W)
+#        
+#        sumX  = np.nansum(X,   axis=1)
+#        sumY  = np.nansum(block, axis=1)
+#        sumXY = np.nansum(block*X, axis=1)
+#        sumX2 = np.nansum(X**2, axis=1)
+#        
+#        denom = N*sumX2 - sumX**2
+#        a = (sumY*sumX2 - sumX*sumXY) / denom
+#        b = (N*sumXY - sumX*sumY) / denom
+#        
+#        newY = a[:,None] + b[:,None]*X
+#        velCorr = block - newY + np.nanmean(block, axis=1)[:,None]
+#        velCorr[velCorr < 1] = 1
+#        
+#        # texture = sqrt(std(velCorr^2))
+#        tvel = np.sqrt(np.nanstd(velCorr**2, axis=1))
+#        velText[:, ii] = tvel
+#    # ---- end junk from AI --- 
+
+#    # 8) mask out eroded areas
     velText[~VELsmall.astype(bool)] = np.nan
     
     # 9) fill those eroded pixels by nearest-neighbor within each cloud
+    # Fill in the regions that were eroded with closest pixel, but only if
+    # there is a non-nan pixel in the contiguous cloud
+    # MATLAB: bwconncomp:   Find and count connected components in binary image
+
+    # retval, labels = cv.connectedComponents(image[, labels[, connectivity[, ltype]]])
+    cv.connectedComponents(VELmask, connectivity=8)
+    # What is this junk?
+
     labeled, ncomp = label(VELmask) # , structure=structure)
     for lab in range(1, ncomp+1):
         coords = np.argwhere(labeled == lab)   # list of (row, col)
@@ -147,18 +243,3 @@ def f_velTexture(VEL, pixRad, velBase):
     
     return velText
 
-######################################################################
-# Key points & differences from MATLAB
-
-# We use scipy.ndimage.binary_erosion with an 8-connected structuring
-# element to replicate imerode(..., strel('disk',5)).
-
-# Padding and fillmissing are done with a custom _fill_line that does
-# 1D linear interpolation plus nearest-end fill
-# (vectorized via np.apply_along_axis).
-
-# The sliding window detrending is fully vectorized (all rows at once)
-# whenever possible, mirroring your sums and omitted-NaN behavior.
-
-# Connected components via scipy.ndimage.label and nearest-neighbor
-# via scipy.spatial.cKDTree stand in for bwconncomp + knnsearch.

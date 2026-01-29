@@ -27,17 +27,24 @@ def pull_out_window(velPadded, pixRad):
         a=(sumY*sumX2-sumX*sumXY)/(N*sumX2-sumX*sumX)
         b=(N*sumXY-sumX*sumY)/(N*sumX2-sumX*sumX)
     
+        # newY=a+b*X  Matlab version
+        # do as a list comprehension a+b*X_row  for every row of X
+        # multiply a single element of b * row_i of X, then add single element of a
+        newY = [a[i]+b[i]*X[i]  for i in range(a.size)]
+    
         #  agrees with Matlab to here. 
-        newY=a+b*X
-        # do as a list comprehension (a+b)*X_col for every column of X
-    
         # Remove slope
-        velCorr=velBlock-newY+mean(velBlock,1,'omitnan')
-        %velCorr=velBlock-newY
-        velCorr(velCorr<1)=1
-    
+        # velCorr=velBlock-newY+mean(velBlock,2,'omitnan')  Matlab version
+        #                       mean(velBlock,2,'omitnan') ==> calculate mean along each row, since 2 ==> second dimension of velBlock
+        velBlockMean = np.nanmean(velBlock,1)
+        velCorr = [velBlock[i]-newY[i]+velBlockMean[i]  for i in range(velBlockMean.size)]
+
+        # velCorr=velBlock-newY
+        # velCorrnp = np.array(velCorr)   # convert to np.array if needed
+        velCorr[velCorr<1]=1     # use boolean indexing on np.array
         # Calculate texture
-        tvel=sqrt(std(velCorr.^2,[],1,'omitnan'))
+        # tvel=sqrt(std(velCorr.^2,[],1,'omitnan'))  Matlab version
+        tvel=np.sqrt(np.nanstd(velCorrnp**2,1,ddof=1)) # ddof ==> N-1 for divisor; Means Delta Degrees of Freedom.
     
         velText(:,ii)=tvel
     end
