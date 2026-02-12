@@ -1,6 +1,6 @@
 import numpy as np
 
-def pull_out_window(velPadded, pixRad, velText):
+def pullOutWindow(velPadded, pixRad, velText):
 
     # Loop through data points in time direction and pull out right window ???
     # working here 1/14/2026 
