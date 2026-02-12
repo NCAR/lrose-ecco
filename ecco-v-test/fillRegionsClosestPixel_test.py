@@ -52,11 +52,11 @@ class Test_velTexture_Methods(unittest.TestCase):
         retval, labels = cv.connectedComponents(VELmask)
         velActual = frcp.fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
         velExpect = np.array([
-            [0.        , 0.        , 0.        , 0.        ,        nan],
-            [1.70757646, 2.27440453, 1.68817099, 1.18394518,        nan],
-            [1.89013863, 2.43437944, 1.88271026, 1.41732399,        nan],
-            [2.59920887, 4.0022225 , 4.33711156, 3.63572722,        nan],
-            [0.        , 0.        , 0.        , 0.        ,        nan]])
+            [0.        , 0.        , 0.        , 0.        ,        np.nan],
+            [1.70757646, 2.27440453, 1.68817099, 1.18394518,        np.nan],
+            [1.89013863, 2.43437944, 1.88271026, 1.41732399,        np.nan],
+            [2.59920887, 4.0022225 , 4.33711156, 3.63572722,        np.nan],
+            [0.        , 0.        , 0.        , 0.        ,        np.nan]])
 
         print("velActual = ")
         print(velActual)
