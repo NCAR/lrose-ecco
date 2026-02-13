@@ -3,8 +3,7 @@
 classdef fillRegionsClosestPixel_test < matlab.unittest.TestCase
     methods(Test)
 
-        function pullOutWindow_one_component(testCase)
-            VEL = ones(5,5);
+        function fillRegionsClosestPixel_one_component(testCase)
 
             VEL = [  0         0         0         0         0;
                 3.5377    3.8622    2.5664         0         0;
@@ -16,7 +15,7 @@ classdef fillRegionsClosestPixel_test < matlab.unittest.TestCase
             velBase = 0;
             [VELmask, VELsmall, velText] = f_velTexturePre(VEL,pixRad,velBase)
 
-            actSolution = fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
+            actSolution = f_fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
             actSolution;
             velExpect = [          0         0         0         0       NaN;
                               1.7075    2.2744    1.6882    1.1839       NaN;
