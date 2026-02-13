@@ -49,11 +49,16 @@ classdef fillRegionsClosestPixel_test < matlab.unittest.TestCase
 
             actSolution = f_fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
             actSolution;
-            velExpect = [          0         0         0         0       NaN;
-                              1.7075    2.2744    1.6882    1.1839       NaN;
-                              1.8901    2.4344    1.8827    1.4173       NaN;
-                              2.5992    4.0022    4.3371    3.6357       NaN;
-                                   0         0         0         0       NaN];
+            velExpect = [      0         0         0         0         0         0         0         0         0       NaN;
+                          3.1898    3.8120    3.7372    2.5388    2.0744    1.4811         0         0         0       NaN;
+                          1.8173    2.3941    2.3161    1.5529    1.1164    0.8541         0         0         0       NaN;
+                          2.1356    2.7278    2.8059    2.2085    1.7154    1.3059         0         0         0       NaN;
+                               0         0         0         0         0         0         0         0         0       NaN;
+                               0         0         0         0         0         0         0         0         0       NaN;
+                               0         0         0         0    0.3318    1.0404    2.0304    2.2148    1.6660       NaN;
+                               0         0         0    0.8177    1.2243    1.5679    2.0662    2.0540    1.6406       NaN;
+                               0         0         0         0         0         0         0         0         0       NaN;
+                               0         0         0         0         0         0         0         0         0       NaN] ;
 
             decimal = 1e-5;
             testCase.verifyEqual(actSolution,velExpect,"AbsTol",1e-4)
