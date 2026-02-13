@@ -69,6 +69,54 @@ class Test_velTexture_Methods(unittest.TestCase):
         # self.assertAlmostEqual(velActual, velExpect, decimal, "not equal")
         self.assertTrue(result, "not equal")
 
+
+    def test_scipy_cKDTree_two_components(self):
+        import numpy as np
+        import cv2 as cv
+        import pullOutWindow as pw
+        import f_velTexturePre as vtp
+        import fillRegionsClosestPixel as frcp
+
+        VEL = np.array([
+            [0,        0,        0,        0, 0,        0,        0,        0, 0, 0],
+            [0,   5.9080,   1.9418,   4.0984, 0,        0,        0,        0, 0, 0],
+            [0,   3.8252,   2.5314,   2.7221, 0,        0,        0,        0, 0, 0],
+            [0,   4.3790,   2.7275,   3.7015, 0,        0,        0,        0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0,        0,        0,        0, 0,   0.9482,   2.1764,   3.5080, 0, 0],
+            [0,        0,        0,        0, 0,   2.6462,   1.4229,   3.2820, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+ 
+        pixRad = 2
+        velBase = 0
+        [VELmask, VELsmall, velText] = vtp.f_velTexture(VEL,pixRad,velBase)
+ 
+        velActual = frcp.fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
+        velExpect = np.array([
+            [0, 0, 0, 0, 0, 0, 0, 0, 0,       np.nan],
+            [3.1898, 3.8120,    3.7372,    2.5388,    2.0744,    1.4811, 0, 0, 0,       np.nan],
+            [1.8173, 2.3941,    2.3161,    1.5529,    1.1164,    0.8541, 0, 0, 0,       np.nan],
+            [2.1356, 2.7278,    2.8059,    2.2085,    1.7154,    1.3059, 0, 0, 0,       np.nan],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0,       np.nan],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0,       np.nan],
+            [0, 0, 0,      0, 0.3318,    1.0404,    2.0304,    2.2148,    1.6660,       np.nan],
+            [0, 0, 0, 0.8177, 1.2243,    1.5679,    2.0662,    2.0540,    1.6406,       np.nan],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0,       np.nan],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0,       np.nan] ])
+  
+        print("velActual = ")
+        print(velActual)
+
+        print("velExpect = ")
+        print(velExpect)
+
+        decimal = 1e-4
+        result = np.allclose(velActual, velExpect, decimal, equal_nan = True)
+        # self.assertAlmostEqual(velActual, velExpect, decimal, "not equal")
+        self.assertTrue(result, "not equal") 
+
     @unittest.skip("demonstrating skipping")
     def test_10x10_ones_pixRad_2_velBase_0(self):
         VEL = np.ones((10,10))
