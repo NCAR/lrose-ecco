@@ -1,7 +1,7 @@
 
 % a function to generate a matrix with n clusters with std deviation. 
 
-function m = genData(bigr, bigc, c1center, c1r, c1c, c2center, c2r, c2c, mean, std)
+function m = genData(bigr, bigc, c1center, c1r, c1c, c2center, c2r, c2c, mean1, std1, mean2, std2)
 
 % VEL  what is a good starting dataset?  
 % Have a 5x5 with one cluster
@@ -10,8 +10,8 @@ function m = genData(bigr, bigc, c1center, c1r, c1c, c2center, c2r, c2c, mean, s
    b = zeros(bigr, bigc);
 
 % [Center, radius], [center, radius], each; use Matlab: normrnd
-   mean = 3;
-   std = 1;
+   mean = mean1;
+   std = std1;
    rows = c1r;
    cols = c1c;
    cluster1 = normrnd(mean,std,[rows,cols]);
@@ -30,6 +30,8 @@ function m = genData(bigr, bigc, c1center, c1r, c1c, c2center, c2r, c2c, mean, s
    %     3.6715    4.6302    3.7269         0         0
    %          0         0         0         0         0
 
+   mean = mean2;
+   std = std2;
    rows = c2r;
    cols = c2c;
    cluster2 = normrnd(mean,std,[rows,cols]);
