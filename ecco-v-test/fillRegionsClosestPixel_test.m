@@ -64,5 +64,44 @@ classdef fillRegionsClosestPixel_test < matlab.unittest.TestCase
             testCase.verifyEqual(actSolution,velExpect,"AbsTol",1e-4)
         end	 
 
+        function fillRegionsClosestPixel_two_components_nan(testCase)
+
+            % bigr=10, bigc=10, c1center=4, c1r=3, c1c=3, c2center=8, c2r=2, c2c=3, mean=3, std=1;
+	    % m = genData(bigr, bigc, c1center, c1r, c1c, c2center, c2r, c2c, mean, std)
+
+            VEL = [ 0         0         0         0         0         0         0         0         0         0;
+                    0    5.9080    1.9418       NaN         0         0         0         0         0         0;
+                    0    3.8252    2.5314    2.7221         0         0         0         0         0         0;
+                    0    4.3790    2.7275    3.7015         0         0         0         0         0         0;
+                    0         0         0         0         0         0         0         0         0         0;
+                    0         0         0         0         0         0         0         0         0         0;
+                    0         0         0         0         0       NaN    2.1764    3.5080         0         0;
+                    0         0         0         0         0    2.6462    1.4229    3.2820         0         0;
+                    0         0         0         0         0         0         0         0         0         0;
+                    0         0         0         0         0         0         0         0         0         0];
+
+            pixRad = 2;
+            velBase = 0;
+            [VELmask, VELsmall, velText] = f_velTexturePre(VEL,pixRad,velBase)
+
+            actSolution = f_fillRegionsClosestPixel(VELmask, VELsmall, velText, VEL)
+            actSolution;
+            velExpect = [
+                 0     0     0     0     0     0     0     0     0   NaN;
+                 0     0     0   NaN     0     0     0     0     0   NaN;
+                 0     0     0     0     0     0     0     0     0   NaN;
+                 0     0     0     0     0     0     0     0     0   NaN;
+                 0     0     0     0     0     0     0     0     0     0;
+                 0     0     0     0     0     0     0     0     0     0;
+                 0     0     0     0     0   NaN     0     0     0     0;
+                 0     0     0     0     0     0     0     0     0     0;
+                 0     0     0     0     0     0     0     0     0     0;
+                 0     0     0     0     0     0     0     0     0   NaN];
+
+            decimal = 1e-5;
+            testCase.verifyEqual(actSolution,velExpect,"AbsTol",1e-4)
+        end	 
+
+
     end
 end
